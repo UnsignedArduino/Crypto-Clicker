@@ -1,7 +1,94 @@
 namespace SpriteKind {
     export const Thing = SpriteKind.create()
+    export const Shop = SpriteKind.create()
 }
-function click () {
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (sprite_cursor_pointer.overlapsWith(sprite_computer)) {
+        computer_click()
+    } else if (sprite_cursor_pointer.overlapsWith(sprite_buy_autoclicker)) {
+        buy_autoclicker_menu()
+    }
+})
+function move_till_not_touching (sprite: Sprite, other_sprite: Sprite, dx: number, dy: number) {
+    while (sprite.overlapsWith(other_sprite)) {
+        sprite.x += dx
+        sprite.y += dy
+        pause(0)
+    }
+}
+function make_cursor () {
+    sprite_cursor = sprites.create(assets.image`cursor`, SpriteKind.Player)
+    sprite_cursor_pointer = sprites.create(assets.image`cursor_pointer`, SpriteKind.Player)
+    sprite_cursor_pointer.setStayInScreen(true)
+    sprite_cursor.z = 50
+    sprite_cursor_pointer.z = 50
+    enable_cursor(true)
+}
+function wait_for_menu_select () {
+    enable_cursor(false)
+    selected = false
+    while (!(selected)) {
+        pause(100)
+    }
+    blockMenu.closeMenu()
+    enable_cursor(true)
+}
+function buy_autoclicker_menu () {
+    local_menu_options = ["Cancel"]
+    if (autoclicker_count > 0) {
+        local_menu_options.push("Sell for $" + Math.round(autoclicker_price * 0.8))
+    }
+    local_menu_options.push("Buy for $" + autoclicker_price)
+    blockMenu.showMenu(local_menu_options, MenuStyle.List, MenuLocation.BottomLeft)
+    wait_for_menu_select()
+    if (blockMenu.selectedMenuOption().includes("Cancel")) {
+    	
+    } else if (blockMenu.selectedMenuOption().includes("Sell")) {
+        autoclicker_count += -1
+        score += Math.round(autoclicker_price * 0.8)
+    } else if (blockMenu.selectedMenuOption().includes("Buy")) {
+        if (score >= autoclicker_price || debug) {
+            autoclicker_count += 1
+            score += autoclicker_price * -1
+        } else {
+            game.showLongText("Not enough points!", DialogLayout.Bottom)
+        }
+    }
+    autoclicker_price = 10
+    for (let index = 0; index < autoclicker_count; index++) {
+        autoclicker_price = autoclicker_price * 1.1
+    }
+    autoclicker_price = Math.round(autoclicker_price)
+    move_till_not_touching(sprite_cursor_pointer, sprite_buy_autoclicker, -1, 0)
+}
+spriteutils.createRenderable(0, function (screen2) {
+    screen2.fillRect(0, 0, 160, 20, 15)
+    images.print(screen2, "Score: " + score, 2, 2, 1)
+    images.print(screen2, "Target: " + magic_number, 2, 10, 1)
+    screen2.drawLine(0, 20, 160, 20, 1)
+})
+spriteutils.createRenderable(0, function (screen2) {
+    screen2.fillRect(0, 21, 56, 100, 13)
+    screen2.drawLine(56, 20, 56, 120, 1)
+})
+spriteutils.createRenderable(0, function (screen2) {
+    screen2.fillRect(0, 80, 56, 40, 15)
+    screen2.drawLine(0, 80, 56, 80, 1)
+    for (let index = 0; index <= 4; index++) {
+        images.print(screen2, convertToText(randint(100000000, 999999999)), 1, 82 + index * 7, 7)
+    }
+})
+spriteutils.createRenderable(0, function (screen2) {
+    images.print(screen2, "Shop:", 58, 22, 1)
+    images.print(screen2, "Cost: $" + autoclicker_price, sprite_buy_autoclicker.right + 4, sprite_buy_autoclicker.top, 1)
+    images.print(screen2, "Have: " + autoclicker_count, sprite_buy_autoclicker.right + 4, sprite_buy_autoclicker.bottom - 8, 1)
+})
+function make_buy_autoclicker () {
+    sprite_buy_autoclicker = sprites.create(assets.image`buy_autoclicker_button`, SpriteKind.Shop)
+    sprite_buy_autoclicker.top = 32
+    sprite_buy_autoclicker.left = 60
+}
+function computer_click () {
     sprites.setDataNumber(sprite_computer, "next_number", randint(0, max_height))
     sprite_computer.say(convertToText(sprites.readDataNumber(sprite_computer, "next_number")))
     sprite_computer.setImage(assets.animation`computer_monitor_loading`[sprites.readDataNumber(sprite_computer, "loading_step")])
@@ -11,34 +98,6 @@ function click () {
     }
     check_for_magic_number(sprites.readDataNumber(sprite_computer, "next_number"))
 }
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (sprite_cursor_pointer.overlapsWith(sprite_computer)) {
-        click()
-    }
-})
-function make_cursor () {
-    sprite_cursor = sprites.create(assets.image`cursor`, SpriteKind.Player)
-    sprite_cursor_pointer = sprites.create(assets.image`cursor_pointer`, SpriteKind.Player)
-    sprite_cursor_pointer.setStayInScreen(true)
-    sprite_cursor.z = 50
-    sprite_cursor_pointer.z = 50
-    enable_cursor(true)
-}
-spriteutils.createRenderable(0, function (screen2) {
-    screen2.fillRect(0, 0, 160, 20, 15)
-    images.print(screen2, "Score: " + score, 2, 2, 1)
-    images.print(screen2, "Target: " + magic_number, 2, 10, 1)
-    screen2.drawLine(0, 20, 160, 20, 1)
-    screen2.fillRect(0, 21, 56, 100, 13)
-    screen2.drawLine(56, 20, 56, 120, 1)
-    screen2.fillRect(0, 80, 56, 40, 15)
-    screen2.drawLine(0, 80, 56, 80, 1)
-    screen2.fillRect(0, 80, 56, 40, 15)
-    screen2.drawLine(0, 80, 56, 80, 1)
-    for (let index = 0; index <= 4; index++) {
-        images.print(screen2, convertToText(randint(100000000, 999999999)), 1, 82 + index * 7, 7)
-    }
-})
 function enable_cursor (en: boolean) {
     if (en) {
         controller.moveSprite(sprite_cursor_pointer, 100, 100)
@@ -62,22 +121,48 @@ function make_main_computer () {
     sprite_computer.y = scene.screenHeight() * 0.5
     sprites.setDataNumber(sprite_computer, "loading_step", 0)
 }
+blockMenu.onMenuOptionSelected(function (option, index) {
+    selected = true
+})
+function make_shop_buttons () {
+    make_buy_autoclicker()
+}
 let local_previous_magic_number = 0
+let local_menu_options: string[] = []
+let selected = false
 let sprite_cursor: Sprite = null
-let sprite_cursor_pointer: Sprite = null
+let sprite_buy_autoclicker: Sprite = null
 let sprite_computer: Sprite = null
+let sprite_cursor_pointer: Sprite = null
+let autoclicker_price = 0
+let autoclicker_count = 0
 let magic_number = 0
 let max_height = 0
 let score_change = 0
 let score = 0
-make_cursor()
-make_main_computer()
-scene.setBackgroundColor(11)
+let debug = false
+debug = true
 score = 0
 score_change = 1
-max_height = 10
+max_height = 5
 magic_number = randint(0, max_height)
+autoclicker_count = 0
+let autoclicker_speed = 10000
+autoclicker_price = 10
+make_cursor()
+make_main_computer()
+make_shop_buttons()
+scene.setBackgroundColor(11)
+blockMenu.setColors(1, 15)
 game.onUpdate(function () {
     sprite_cursor.top = sprite_cursor_pointer.top
     sprite_cursor.left = sprite_cursor_pointer.left
+})
+forever(function () {
+    for (let index = 0; index <= autoclicker_count - 1; index++) {
+        timer.throttle("autoclicker_click" + index, autoclicker_speed, function () {
+            computer_click()
+        })
+        pause(autoclicker_speed / autoclicker_count)
+    }
 })

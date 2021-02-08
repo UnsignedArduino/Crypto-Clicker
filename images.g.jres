@@ -15,6 +15,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "computer_monitor"
     },
+    "image5": {
+        "data": "hwQQABAAAAD//////////x8RERERERHxHxEREREREfEfERERERER8R8RERERERHxH///////EfEf8RERER8R8R8RHxHxHxHxHxHxERHxH/EfEREf8R/x8R8REfEf8f/xHxERER8REfEfERERERER8R8RERERERHxHxEREREREfH//////////w==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "buy_autoclicker_button"
+    },
     "anim1": {
         "namespace": "myAnimations",
         "id": "anim1",
