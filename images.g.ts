@@ -26,24 +26,6 @@ f . . . f 1 f . . .
 . . . . . f 1 f . . 
 . . . . . . f . . . 
 `;
-            case "image4":return img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-`;
             case "image3":
             case "computer_monitor":return img`
 ffffffffffffffffffffffff
@@ -81,6 +63,25 @@ f 1 1 1 1 f f f 1 f 1 1 1 1 1 f
 f 1 1 1 1 f 1 1 f 1 f 1 1 1 1 f 
 f 1 1 1 1 1 1 1 f 1 f 1 1 1 1 f 
 f 1 1 1 1 1 1 1 1 f f 1 1 1 1 f 
+f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
+f f f f f f f f f f f f f f f f 
+`;
+            case "image6":
+            case "buy_computer_button":return img`
+f f f f f f f f f f f f f f f f 
+f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
+f 1 f f f f f f f f f f f f 1 f 
+f 1 f 1 1 1 1 1 1 1 1 1 1 f 1 f 
+f 1 f 1 1 1 1 1 1 1 1 1 1 f 1 f 
+f 1 f 1 1 1 1 1 1 1 1 1 1 f 1 f 
+f 1 f 1 1 1 1 1 1 1 1 1 1 f 1 f 
+f 1 f 1 1 1 1 1 1 1 1 1 1 f 1 f 
+f 1 f 1 1 1 1 1 1 1 1 1 1 f 1 f 
+f 1 f 1 1 1 1 1 1 1 1 1 1 f 1 f 
+f 1 f f f f f f f f f f f f 1 f 
+f 1 1 1 1 1 1 f f 1 1 1 1 1 1 f 
+f 1 1 1 1 1 f f f f 1 1 1 1 1 f 
+f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
 f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
 f f f f f f f f f f f f f f f f 
 `;

@@ -2,11 +2,41 @@ namespace SpriteKind {
     export const Thing = SpriteKind.create()
     export const Shop = SpriteKind.create()
 }
+function buy_computer_menu () {
+    local_menu_options = ["Cancel"]
+    if (computer_count > 0) {
+        local_menu_options.push("Sell for $" + Math.round(computer_price * 0.8))
+    }
+    local_menu_options.push("Buy for $" + computer_price)
+    blockMenu.showMenu(local_menu_options, MenuStyle.List, MenuLocation.BottomLeft)
+    wait_for_menu_select()
+    if (blockMenu.selectedMenuOption().includes("Cancel")) {
+    	
+    } else if (blockMenu.selectedMenuOption().includes("Sell")) {
+        computer_count += -1
+        score += Math.round(computer_price * 0.8)
+    } else if (blockMenu.selectedMenuOption().includes("Buy")) {
+        if (score >= computer_price || debug) {
+            computer_count += 1
+            score += computer_price * -1
+        } else {
+            game.showLongText("Not enough points!", DialogLayout.Bottom)
+        }
+    }
+    computer_price = 50
+    for (let index = 0; index < computer_count; index++) {
+        computer_price = computer_price * 1.1
+    }
+    computer_price = Math.round(computer_price)
+    move_till_not_touching(sprite_cursor_pointer, sprite_buy_computer, -1, 0)
+}
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (sprite_cursor_pointer.overlapsWith(sprite_computer)) {
         computer_click()
     } else if (sprite_cursor_pointer.overlapsWith(sprite_buy_autoclicker)) {
         buy_autoclicker_menu()
+    } else if (sprite_cursor_pointer.overlapsWith(sprite_buy_computer)) {
+        buy_computer_menu()
     }
 })
 function move_till_not_touching (sprite: Sprite, other_sprite: Sprite, dx: number, dy: number) {
@@ -82,11 +112,18 @@ spriteutils.createRenderable(0, function (screen2) {
     images.print(screen2, "Shop:", 58, 22, 1)
     images.print(screen2, "Cost: $" + autoclicker_price, sprite_buy_autoclicker.right + 4, sprite_buy_autoclicker.top, 1)
     images.print(screen2, "Have: " + autoclicker_count, sprite_buy_autoclicker.right + 4, sprite_buy_autoclicker.bottom - 8, 1)
+    images.print(screen2, "Cost: $" + computer_price, sprite_buy_computer.right + 4, sprite_buy_computer.top, 1)
+    images.print(screen2, "Have: " + computer_count, sprite_buy_computer.right + 4, sprite_buy_computer.bottom - 8, 1)
 })
 function make_buy_autoclicker () {
     sprite_buy_autoclicker = sprites.create(assets.image`buy_autoclicker_button`, SpriteKind.Shop)
     sprite_buy_autoclicker.top = 32
     sprite_buy_autoclicker.left = 60
+}
+function make_buy_computer () {
+    sprite_buy_computer = sprites.create(assets.image`buy_computer_button`, SpriteKind.Player)
+    sprite_buy_computer.top = 52
+    sprite_buy_computer.left = 60
 }
 function computer_click () {
     sprites.setDataNumber(sprite_computer, "next_number", randint(0, max_height))
@@ -126,14 +163,18 @@ blockMenu.onMenuOptionSelected(function (option, index) {
 })
 function make_shop_buttons () {
     make_buy_autoclicker()
+    make_buy_computer()
 }
 let local_previous_magic_number = 0
-let local_menu_options: string[] = []
 let selected = false
 let sprite_cursor: Sprite = null
 let sprite_buy_autoclicker: Sprite = null
 let sprite_computer: Sprite = null
+let sprite_buy_computer: Sprite = null
 let sprite_cursor_pointer: Sprite = null
+let local_menu_options: string[] = []
+let computer_price = 0
+let computer_count = 0
 let autoclicker_price = 0
 let autoclicker_count = 0
 let magic_number = 0
@@ -141,7 +182,7 @@ let max_height = 0
 let score_change = 0
 let score = 0
 let debug = false
-debug = true
+debug = false
 score = 0
 score_change = 1
 max_height = 5
@@ -149,6 +190,9 @@ magic_number = randint(0, max_height)
 autoclicker_count = 0
 let autoclicker_speed = 10000
 autoclicker_price = 10
+computer_count = 0
+let computer_speed = 1000
+computer_price = 50
 make_cursor()
 make_main_computer()
 make_shop_buttons()
@@ -160,9 +204,17 @@ game.onUpdate(function () {
 })
 forever(function () {
     for (let index = 0; index <= autoclicker_count - 1; index++) {
-        timer.throttle("autoclicker_click" + index, autoclicker_speed, function () {
+        timer.throttle("autoclicker_click_" + index, autoclicker_speed, function () {
             computer_click()
         })
         pause(autoclicker_speed / autoclicker_count)
+    }
+})
+forever(function () {
+    for (let index = 0; index <= computer_count - 1; index++) {
+        timer.throttle("autoclicker_click_" + index, computer_speed, function () {
+            check_for_magic_number(randint(0, max_height))
+        })
+        pause(computer_speed / computer_count)
     }
 })
