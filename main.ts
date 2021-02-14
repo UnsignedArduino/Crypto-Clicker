@@ -115,6 +115,15 @@ spriteutils.createRenderable(0, function (screen2) {
     images.print(screen2, "Cost: $" + computer_price, sprite_buy_computer.right + 4, sprite_buy_computer.top, 1)
     images.print(screen2, "Have: " + computer_count, sprite_buy_computer.right + 4, sprite_buy_computer.bottom - 8, 1)
 })
+spriteutils.createRenderable(0, function (screen2) {
+    screen2.drawLine(56, sprite_upgrades_button.top - 3, 160, sprite_upgrades_button.top - 3, 1)
+})
+function make_upgrades_button () {
+    sprite_upgrades_button = sprites.create(assets.image`upgrades_button`, SpriteKind.Player)
+    sprite_upgrades_button.left = 60
+    sprite_upgrades_button.bottom = scene.screenHeight() - 2
+    images.print(sprite_upgrades_button.image, "Upgrades Menu", 2, 2, 15)
+}
 function make_buy_autoclicker () {
     sprite_buy_autoclicker = sprites.create(assets.image`buy_autoclicker_button`, SpriteKind.Shop)
     sprite_buy_autoclicker.top = 32
@@ -164,8 +173,10 @@ blockMenu.onMenuOptionSelected(function (option, index) {
 function make_shop_buttons () {
     make_buy_autoclicker()
     make_buy_computer()
+    make_upgrades_button()
 }
 let local_previous_magic_number = 0
+let sprite_upgrades_button: Sprite = null
 let selected = false
 let sprite_cursor: Sprite = null
 let sprite_buy_autoclicker: Sprite = null
@@ -182,7 +193,7 @@ let max_height = 0
 let score_change = 0
 let score = 0
 let debug = false
-debug = false
+debug = true
 score = 0
 score_change = 1
 max_height = 5
