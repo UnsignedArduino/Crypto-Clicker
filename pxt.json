@@ -15,8 +15,7 @@
         "README.md",
         "assets.json",
         "images.g.jres",
-        "images.g.ts",
-        null
+        "images.g.ts"
     ],
     "testFiles": [
         "test.ts"
