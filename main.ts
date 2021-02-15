@@ -218,7 +218,6 @@ forever(function () {
         timer.throttle("autoclicker_click_" + index, autoclicker_speed, function () {
             computer_click()
         })
-        pause(autoclicker_speed / autoclicker_count)
     }
 })
 forever(function () {
@@ -226,6 +225,5 @@ forever(function () {
         timer.throttle("autoclicker_click_" + index, computer_speed, function () {
             check_for_magic_number(randint(0, max_height))
         })
-        pause(computer_speed / computer_count)
     }
 })
