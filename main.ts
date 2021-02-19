@@ -48,6 +48,9 @@ function load_progress () {
     computer_count = blockSettings.readNumber("game_computer_count")
     computer_speed = blockSettings.readNumber("game_computer_speed")
     computer_price = blockSettings.readNumber("game_computer_price")
+    asic_count = blockSettings.readNumber("game_asic_count")
+    asic_speed = blockSettings.readNumber("game_asic_speed")
+    asic_price = blockSettings.readNumber("game_asic_price")
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (sprite_cursor_pointer.overlapsWith(sprite_computer)) {
@@ -191,6 +194,9 @@ function set_default_save () {
     computer_count = 0
     computer_speed = 1000
     computer_price = 10
+    asic_count = 0
+    asic_speed = 200
+    asic_price = 100
 }
 function wipe_save () {
     for (let value of blockSettings.list()) {
@@ -226,6 +232,9 @@ function save_progress () {
     blockSettings.writeNumber("game_computer_count", computer_count)
     blockSettings.writeNumber("game_computer_speed", computer_speed)
     blockSettings.writeNumber("game_computer_price", computer_price)
+    blockSettings.writeNumber("game_asic_count", asic_count)
+    blockSettings.writeNumber("game_asic_speed", asic_speed)
+    blockSettings.writeNumber("game_asic_price", asic_price)
 }
 function enable_cursor (en: boolean) {
     if (en) {
@@ -268,6 +277,9 @@ let sprite_menu_button: Sprite = null
 let sprite_upgrades_button: Sprite = null
 let sprite_buy_autoclicker: Sprite = null
 let sprite_computer: Sprite = null
+let asic_price = 0
+let asic_speed = 0
+let asic_count = 0
 let computer_speed = 0
 let autoclicker_price = 0
 let autoclicker_speed = 0
