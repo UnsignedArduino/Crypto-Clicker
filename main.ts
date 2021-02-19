@@ -74,6 +74,7 @@ function menu_menu () {
     	
     } else if (blockMenu.selectedMenuOption().includes("Save")) {
         save_progress()
+        Notification.notify("Saved progress!", assets.image`floppy_disc`)
     } else if (blockMenu.selectedMenuOption().includes("Wipe")) {
     	
     }
