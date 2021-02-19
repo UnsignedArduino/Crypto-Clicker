@@ -44,6 +44,11 @@ function load_progress () {
     if (!(blockSettings.exists("game_saves"))) {
         return
     }
+    if (blockSettings.readNumber("game_show_particles") == 0) {
+        show_particles = false
+    } else {
+        show_particles = true
+    }
     score = blockSettings.readNumber("game_score")
     score_change = blockSettings.readNumber("game_score_change")
     max_height = blockSettings.readNumber("game_max_height")
@@ -77,6 +82,7 @@ function menu_menu () {
     local_menu_options = ["Cancel"]
     local_menu_options.push("Save progress")
     local_menu_options.push("Wipe save")
+    local_menu_options.push("Toggle confetti")
     blockMenu.showMenu(local_menu_options, MenuStyle.List, MenuLocation.BottomLeft)
     wait_for_menu_select()
     if (blockMenu.selectedMenuOption().includes("Cancel")) {
@@ -95,6 +101,8 @@ function menu_menu () {
                 Notification.notify("Save wiped!", assets.image`trash_bin`)
             })
         }
+    } else if (blockMenu.selectedMenuOption().includes("Toggle")) {
+        show_particles = !(show_particles)
     }
     move_till_not_touching(sprite_cursor_pointer, sprite_menu_button, 0, -1)
 }
@@ -223,6 +231,7 @@ function make_buy_computer () {
     sprite_buy_computer.left = 60
 }
 function set_default_save () {
+    show_particles = true
     score = 0
     score_change = 1
     max_height = 5
@@ -261,6 +270,11 @@ function save_progress () {
     } else {
         blockSettings.writeNumber("game_saves", 1)
     }
+    if (show_particles) {
+        blockSettings.writeNumber("game_show_particles", 1)
+    } else {
+        blockSettings.writeNumber("game_show_particles", 0)
+    }
     blockSettings.writeNumber("game_score", score)
     blockSettings.writeNumber("game_score_change", score_change)
     blockSettings.writeNumber("game_max_height", max_height)
@@ -289,7 +303,9 @@ function make_menu_button () {
 }
 function check_for_magic_number (got: number) {
     if (got == magic_number) {
-        effects.confetti.startScreenEffect(200)
+        if (show_particles) {
+            effects.confetti.startScreenEffect(200)
+        }
         score += score_change
         local_previous_magic_number = magic_number
         while (magic_number == local_previous_magic_number) {
@@ -326,6 +342,7 @@ let autoclicker_count = 0
 let magic_number = 0
 let max_height = 0
 let score_change = 0
+let show_particles = false
 let sprite_buy_asic: Sprite = null
 let sprite_buy_computer: Sprite = null
 let sprite_cursor_pointer: Sprite = null
@@ -335,7 +352,7 @@ let computer_count = 0
 let local_menu_options: string[] = []
 let hash_per_sec = 0
 let debug = false
-debug = true
+debug = false
 let hash_count_per_sec = 0
 hash_per_sec = 0
 set_default_save()
