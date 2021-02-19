@@ -44,6 +44,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "trash_bin"
     },
+    "image10": {
+        "data": "hwQQABAAAAD//////////x8RERERERHxHxER8f//EfEfERH8zPwR8R8REfzM/BHxHxER8cz8EfEfEfH/zPwR8R8RH/HM/BHxHxEf8cz8EfEfER/8zPwR8R8R8fzM/BHxHxER/Mz8EfEfERHx//8R8R8RERH/HxHxHxEREREREfH//////////w==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "buy_asic_button"
+    },
     "anim1": {
         "namespace": "myAnimations",
         "id": "anim1",

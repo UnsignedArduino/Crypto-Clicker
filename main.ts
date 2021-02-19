@@ -31,8 +31,14 @@ function buy_computer_menu () {
 function make_buttons () {
     make_buy_autoclicker()
     make_buy_computer()
+    make_buy_asic()
     make_upgrades_button()
     make_menu_button()
+}
+function make_buy_asic () {
+    sprite_buy_asic = sprites.create(assets.image`buy_asic_button`, SpriteKind.Shop)
+    sprite_buy_asic.top = 72
+    sprite_buy_asic.left = 60
 }
 function load_progress () {
     if (!(blockSettings.exists("game_saves"))) {
@@ -287,6 +293,7 @@ let autoclicker_count = 0
 let magic_number = 0
 let max_height = 0
 let score_change = 0
+let sprite_buy_asic: Sprite = null
 let sprite_buy_computer: Sprite = null
 let sprite_cursor_pointer: Sprite = null
 let score = 0

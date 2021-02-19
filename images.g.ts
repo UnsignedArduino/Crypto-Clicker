@@ -137,6 +137,25 @@ f f f f f f f f
 . . f . . f . . 
 . . f f f f . . 
 `;
+            case "image10":
+            case "buy_asic_button":return img`
+f f f f f f f f f f f f f f f f 
+f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
+f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
+f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
+f 1 1 1 1 1 1 f f f 1 1 1 1 1 f 
+f 1 1 1 1 1 f 1 1 1 f 1 1 1 1 f 
+f 1 1 c c 1 f 1 1 c c c 1 1 1 f 
+f 1 f f f f f f f f f f f 1 1 f 
+f 1 f c c c c c c c c c f f 1 f 
+f 1 f c c c c c c c c c f f 1 f 
+f 1 f c c c c c c c c c f f 1 f 
+f 1 f f f f f f f f f f f 1 1 f 
+f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
+f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
+f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
+f f f f f f f f f f f f f f f f 
+`;
         }
         return null;
     })
