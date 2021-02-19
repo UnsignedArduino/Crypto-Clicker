@@ -74,9 +74,18 @@ function menu_menu () {
     	
     } else if (blockMenu.selectedMenuOption().includes("Save")) {
         save_progress()
-        Notification.notify("Saved progress!", assets.image`floppy_disc`)
+        timer.background(function () {
+            Notification.waitForNotificationFinish()
+            Notification.notify("Saved progress!", assets.image`floppy_disc`)
+        })
     } else if (blockMenu.selectedMenuOption().includes("Wipe")) {
-    	
+        if (game.ask("Are you sure you", "want to wipe save?")) {
+            wipe_save()
+            timer.background(function () {
+                Notification.waitForNotificationFinish()
+                Notification.notify("Save wiped!", assets.image`trash_bin`)
+            })
+        }
     }
     move_till_not_touching(sprite_cursor_pointer, sprite_menu_button, 0, -1)
 }
@@ -175,6 +184,26 @@ function make_buy_computer () {
     sprite_buy_computer.top = 52
     sprite_buy_computer.left = 60
 }
+function set_default_save () {
+    score = 0
+    score_change = 1
+    max_height = 5
+    magic_number = randint(0, max_height)
+    autoclicker_count = 0
+    autoclicker_speed = 10000
+    autoclicker_price = 2
+    computer_count = 0
+    computer_speed = 1000
+    computer_price = 10
+}
+function wipe_save () {
+    for (let value of blockSettings.list()) {
+        if (value.indexOf("game") == 0) {
+            blockSettings.remove(value)
+        }
+    }
+    set_default_save()
+}
 function computer_click () {
     sprites.setDataNumber(sprite_computer, "next_number", randint(0, max_height))
     sprite_computer.say(convertToText(sprites.readDataNumber(sprite_computer, "next_number")))
@@ -243,31 +272,22 @@ let sprite_menu_button: Sprite = null
 let sprite_upgrades_button: Sprite = null
 let sprite_buy_autoclicker: Sprite = null
 let sprite_computer: Sprite = null
-let sprite_buy_computer: Sprite = null
-let sprite_cursor_pointer: Sprite = null
-let local_menu_options: string[] = []
-let computer_price = 0
 let computer_speed = 0
-let computer_count = 0
 let autoclicker_price = 0
 let autoclicker_speed = 0
 let autoclicker_count = 0
 let magic_number = 0
 let max_height = 0
 let score_change = 0
+let sprite_buy_computer: Sprite = null
+let sprite_cursor_pointer: Sprite = null
 let score = 0
+let computer_price = 0
+let computer_count = 0
+let local_menu_options: string[] = []
 let debug = false
 debug = true
-score = 0
-score_change = 1
-max_height = 5
-magic_number = randint(0, max_height)
-autoclicker_count = 0
-autoclicker_speed = 10000
-autoclicker_price = 2
-computer_count = 0
-computer_speed = 1000
-computer_price = 10
+set_default_save()
 make_cursor()
 make_main_computer()
 make_buttons()

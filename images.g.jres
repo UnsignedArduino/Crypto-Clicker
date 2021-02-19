@@ -39,6 +39,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "floppy_disc"
     },
+    "image9": {
+        "data": "hwQIAAgAAAAPAAAA////AA+QAP8PCQnwDwkJ8A+QAP////8ADwAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "trash_bin"
+    },
     "anim1": {
         "namespace": "myAnimations",
         "id": "anim1",

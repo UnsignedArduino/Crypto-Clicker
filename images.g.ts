@@ -126,6 +126,17 @@ f 1 1 1 1 1 1 f
 f 1 f f f f 1 f 
 f 1 1 1 1 1 1 f 
 `;
+            case "image9":
+            case "trash_bin":return img`
+f f f f f f f f 
+. f . . . . f . 
+. f . 9 9 . f . 
+. f 9 . . 9 f . 
+. f . 9 9 . f . 
+. f . . . . f . 
+. . f . . f . . 
+. . f f f f . . 
+`;
         }
         return null;
     })
