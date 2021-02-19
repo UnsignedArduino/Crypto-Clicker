@@ -29,6 +29,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "upgrades_button"
     },
+    "image7": {
+        "data": "hwQMAAwAAAD///////8AAB8RERER8QAAH//xH//xAAAf//Ef//EAAB//8R//8QAAH//xH//xAAAf//Ef//EAAB//8R//8QAAH//xH//xAAAf//Ef//EAAB8RERER8QAA////////AAA=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "menu_button"
+    },
     "anim1": {
         "namespace": "myAnimations",
         "id": "anim1",

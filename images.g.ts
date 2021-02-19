@@ -100,6 +100,21 @@ f1111111111111111111111111111111111111111111111111111111111111111111111111111111
 f11111111111111111111111111111111111111111111111111111111111111111111111111111111f
 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 `;
+            case "image7":
+            case "menu_button":return img`
+f f f f f f f f f f f f 
+f 1 1 1 1 1 1 1 1 1 1 f 
+f 1 f f f f f f f f 1 f 
+f 1 f f f f f f f f 1 f 
+f 1 1 1 1 1 1 1 1 1 1 f 
+f 1 f f f f f f f f 1 f 
+f 1 f f f f f f f f 1 f 
+f 1 1 1 1 1 1 1 1 1 1 f 
+f 1 f f f f f f f f 1 f 
+f 1 f f f f f f f f 1 f 
+f 1 1 1 1 1 1 1 1 1 1 f 
+f f f f f f f f f f f f 
+`;
         }
         return null;
     })

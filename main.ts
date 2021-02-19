@@ -30,6 +30,27 @@ function buy_computer_menu () {
     computer_price = Math.round(computer_price)
     move_till_not_touching(sprite_cursor_pointer, sprite_buy_computer, -1, 0)
 }
+function make_buttons () {
+    make_buy_autoclicker()
+    make_buy_computer()
+    make_upgrades_button()
+    make_menu_button()
+}
+function load_progress () {
+    if (!(blockSettings.exists("game_saves"))) {
+        return
+    }
+    score = blockSettings.readNumber("game_score")
+    score_change = blockSettings.readNumber("game_score_change")
+    max_height = blockSettings.readNumber("game_max_height")
+    magic_number = blockSettings.readNumber("game_magic_number")
+    autoclicker_count = blockSettings.readNumber("game_autoclicker_count")
+    autoclicker_speed = blockSettings.readNumber("game_autoclicker_speed")
+    autoclicker_price = blockSettings.readNumber("game_autoclicker_price")
+    computer_count = blockSettings.readNumber("game_computer_count")
+    computer_speed = blockSettings.readNumber("game_computer_speed")
+    computer_price = blockSettings.readNumber("game_computer_price")
+}
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (sprite_cursor_pointer.overlapsWith(sprite_computer)) {
         computer_click()
@@ -37,8 +58,27 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         buy_autoclicker_menu()
     } else if (sprite_cursor_pointer.overlapsWith(sprite_buy_computer)) {
         buy_computer_menu()
+    } else if (sprite_cursor_pointer.overlapsWith(sprite_upgrades_button)) {
+        get_upgrades_menu()
+    } else if (sprite_cursor_pointer.overlapsWith(sprite_menu_button)) {
+        menu_menu()
     }
 })
+function menu_menu () {
+    local_menu_options = ["Cancel"]
+    local_menu_options.push("Save progress")
+    local_menu_options.push("Wipe save")
+    blockMenu.showMenu(local_menu_options, MenuStyle.List, MenuLocation.BottomLeft)
+    wait_for_menu_select()
+    if (blockMenu.selectedMenuOption().includes("Cancel")) {
+    	
+    } else if (blockMenu.selectedMenuOption().includes("Save")) {
+        save_progress()
+    } else if (blockMenu.selectedMenuOption().includes("Wipe")) {
+    	
+    }
+    move_till_not_touching(sprite_cursor_pointer, sprite_menu_button, 0, -1)
+}
 function move_till_not_touching (sprite: Sprite, other_sprite: Sprite, dx: number, dy: number) {
     while (sprite.overlapsWith(other_sprite)) {
         sprite.x += dx
@@ -119,7 +159,7 @@ spriteutils.createRenderable(0, function (screen2) {
     screen2.drawLine(56, sprite_upgrades_button.top - 3, 160, sprite_upgrades_button.top - 3, 1)
 })
 function make_upgrades_button () {
-    sprite_upgrades_button = sprites.create(assets.image`upgrades_button`, SpriteKind.Player)
+    sprite_upgrades_button = sprites.create(assets.image`upgrades_button`, SpriteKind.Shop)
     sprite_upgrades_button.left = 60
     sprite_upgrades_button.bottom = scene.screenHeight() - 2
     images.print(sprite_upgrades_button.image, "Upgrades Menu", 2, 2, 15)
@@ -130,7 +170,7 @@ function make_buy_autoclicker () {
     sprite_buy_autoclicker.left = 60
 }
 function make_buy_computer () {
-    sprite_buy_computer = sprites.create(assets.image`buy_computer_button`, SpriteKind.Player)
+    sprite_buy_computer = sprites.create(assets.image`buy_computer_button`, SpriteKind.Shop)
     sprite_buy_computer.top = 52
     sprite_buy_computer.left = 60
 }
@@ -144,12 +184,34 @@ function computer_click () {
     }
     check_for_magic_number(sprites.readDataNumber(sprite_computer, "next_number"))
 }
+function save_progress () {
+    if (blockSettings.exists("game_saves")) {
+        blockSettings.writeNumber("game_saves", blockSettings.readNumber("game_saves") + 1)
+    } else {
+        blockSettings.writeNumber("game_saves", 1)
+    }
+    blockSettings.writeNumber("game_score", score)
+    blockSettings.writeNumber("game_score_change", score_change)
+    blockSettings.writeNumber("game_max_height", max_height)
+    blockSettings.writeNumber("game_magic_number", magic_number)
+    blockSettings.writeNumber("game_autoclicker_count", autoclicker_count)
+    blockSettings.writeNumber("game_autoclicker_speed", autoclicker_speed)
+    blockSettings.writeNumber("game_autoclicker_price", autoclicker_price)
+    blockSettings.writeNumber("game_computer_count", computer_count)
+    blockSettings.writeNumber("game_computer_speed", computer_speed)
+    blockSettings.writeNumber("game_computer_price", computer_price)
+}
 function enable_cursor (en: boolean) {
     if (en) {
         controller.moveSprite(sprite_cursor_pointer, 100, 100)
     } else {
         controller.moveSprite(sprite_cursor_pointer, 0, 0)
     }
+}
+function make_menu_button () {
+    sprite_menu_button = sprites.create(assets.image`menu_button`, SpriteKind.Shop)
+    sprite_menu_button.left = sprite_upgrades_button.right + 2
+    sprite_menu_button.bottom = scene.screenHeight() - 2
 }
 function check_for_magic_number (got: number) {
     if (got == magic_number) {
@@ -161,6 +223,9 @@ function check_for_magic_number (got: number) {
         }
     }
 }
+function get_upgrades_menu () {
+	
+}
 function make_main_computer () {
     sprite_computer = sprites.create(assets.image`computer_monitor`, SpriteKind.Thing)
     sprite_computer.left = 16
@@ -170,23 +235,21 @@ function make_main_computer () {
 blockMenu.onMenuOptionSelected(function (option, index) {
     selected = true
 })
-function make_shop_buttons () {
-    make_buy_autoclicker()
-    make_buy_computer()
-    make_upgrades_button()
-}
 let local_previous_magic_number = 0
-let sprite_upgrades_button: Sprite = null
 let selected = false
 let sprite_cursor: Sprite = null
+let sprite_menu_button: Sprite = null
+let sprite_upgrades_button: Sprite = null
 let sprite_buy_autoclicker: Sprite = null
 let sprite_computer: Sprite = null
 let sprite_buy_computer: Sprite = null
 let sprite_cursor_pointer: Sprite = null
 let local_menu_options: string[] = []
 let computer_price = 0
+let computer_speed = 0
 let computer_count = 0
 let autoclicker_price = 0
+let autoclicker_speed = 0
 let autoclicker_count = 0
 let magic_number = 0
 let max_height = 0
@@ -199,16 +262,17 @@ score_change = 1
 max_height = 5
 magic_number = randint(0, max_height)
 autoclicker_count = 0
-let autoclicker_speed = 10000
+autoclicker_speed = 10000
 autoclicker_price = 2
 computer_count = 0
-let computer_speed = 1000
+computer_speed = 1000
 computer_price = 10
 make_cursor()
 make_main_computer()
-make_shop_buttons()
+make_buttons()
 scene.setBackgroundColor(11)
 blockMenu.setColors(1, 15)
+load_progress()
 game.onUpdate(function () {
     sprite_cursor.top = sprite_cursor_pointer.top
     sprite_cursor.left = sprite_cursor_pointer.left
