@@ -65,6 +65,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         buy_autoclicker_menu()
     } else if (sprite_cursor_pointer.overlapsWith(sprite_buy_computer)) {
         buy_computer_menu()
+    } else if (sprite_cursor_pointer.overlapsWith(sprite_buy_asic)) {
+        buy_asic_menu()
     } else if (sprite_cursor_pointer.overlapsWith(sprite_upgrades_button)) {
         get_upgrades_menu()
     } else if (sprite_cursor_pointer.overlapsWith(sprite_menu_button)) {
@@ -95,6 +97,32 @@ function menu_menu () {
         }
     }
     move_till_not_touching(sprite_cursor_pointer, sprite_menu_button, 0, -1)
+}
+function buy_asic_menu () {
+    local_menu_options = ["Cancel"]
+    if (asic_count > 0) {
+        local_menu_options.push("Sell for $" + Math.round(asic_price * 0.8))
+    }
+    if (score >= asic_price || debug) {
+        local_menu_options.push("Buy for $" + asic_price)
+    }
+    blockMenu.showMenu(local_menu_options, MenuStyle.List, MenuLocation.BottomLeft)
+    wait_for_menu_select()
+    if (blockMenu.selectedMenuOption().includes("Cancel")) {
+    	
+    } else if (blockMenu.selectedMenuOption().includes("Sell")) {
+        asic_count += -1
+        score += Math.round(asic_price * 0.8)
+    } else if (blockMenu.selectedMenuOption().includes("Buy")) {
+        asic_count += 1
+        score += asic_price * -1
+    }
+    asic_price = 100
+    for (let index = 0; index < asic_count; index++) {
+        asic_price = asic_price * 1.1
+    }
+    asic_price = Math.round(asic_price)
+    move_till_not_touching(sprite_cursor_pointer, sprite_buy_asic, -1, 0)
 }
 function move_till_not_touching (sprite: Sprite, other_sprite: Sprite, dx: number, dy: number) {
     while (sprite.overlapsWith(other_sprite)) {
@@ -169,6 +197,8 @@ spriteutils.createRenderable(0, function (screen2) {
     images.print(screen2, "Have: " + autoclicker_count, sprite_buy_autoclicker.right + 4, sprite_buy_autoclicker.bottom - 8, 1)
     images.print(screen2, "Cost: $" + computer_price, sprite_buy_computer.right + 4, sprite_buy_computer.top, 1)
     images.print(screen2, "Have: " + computer_count, sprite_buy_computer.right + 4, sprite_buy_computer.bottom - 8, 1)
+    images.print(screen2, "Cost: $" + asic_price, sprite_buy_asic.right + 4, sprite_buy_asic.top, 1)
+    images.print(screen2, "Have: " + asic_count, sprite_buy_asic.right + 4, sprite_buy_asic.bottom - 8, 1)
 })
 spriteutils.createRenderable(0, function (screen2) {
     screen2.drawLine(56, sprite_upgrades_button.top - 3, 160, sprite_upgrades_button.top - 3, 1)
@@ -301,7 +331,7 @@ let computer_price = 0
 let computer_count = 0
 let local_menu_options: string[] = []
 let debug = false
-debug = false
+debug = true
 set_default_save()
 make_cursor()
 make_main_computer()
@@ -322,7 +352,14 @@ forever(function () {
 })
 forever(function () {
     for (let index = 0; index <= computer_count - 1; index++) {
-        timer.throttle("autoclicker_click_" + index, computer_speed, function () {
+        timer.throttle("computer_mine_" + index, computer_speed, function () {
+            check_for_magic_number(randint(0, max_height))
+        })
+    }
+})
+forever(function () {
+    for (let index = 0; index <= asic_count - 1; index++) {
+        timer.throttle("asic_mine_" + index, asic_speed, function () {
             check_for_magic_number(randint(0, max_height))
         })
     }
