@@ -200,10 +200,10 @@ max_height = 5
 magic_number = randint(0, max_height)
 autoclicker_count = 0
 let autoclicker_speed = 10000
-autoclicker_price = 2
+autoclicker_price = 10
 computer_count = 0
 let computer_speed = 1000
-computer_price = 10
+computer_price = 50
 make_cursor()
 make_main_computer()
 make_shop_buttons()
