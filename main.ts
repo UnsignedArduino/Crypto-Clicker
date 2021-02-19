@@ -7,7 +7,9 @@ function buy_computer_menu () {
     if (computer_count > 0) {
         local_menu_options.push("Sell for $" + Math.round(computer_price * 0.8))
     }
-    local_menu_options.push("Buy for $" + computer_price)
+    if (score >= computer_price || debug) {
+        local_menu_options.push("Buy for $" + computer_price)
+    }
     blockMenu.showMenu(local_menu_options, MenuStyle.List, MenuLocation.BottomLeft)
     wait_for_menu_select()
     if (blockMenu.selectedMenuOption().includes("Cancel")) {
@@ -16,12 +18,8 @@ function buy_computer_menu () {
         computer_count += -1
         score += Math.round(computer_price * 0.8)
     } else if (blockMenu.selectedMenuOption().includes("Buy")) {
-        if (score >= computer_price || debug) {
-            computer_count += 1
-            score += computer_price * -1
-        } else {
-            game.showLongText("Not enough points!", DialogLayout.Bottom)
-        }
+        computer_count += 1
+        score += computer_price * -1
     }
     computer_price = 10
     for (let index = 0; index < computer_count; index++) {
@@ -118,7 +116,9 @@ function buy_autoclicker_menu () {
     if (autoclicker_count > 0) {
         local_menu_options.push("Sell for $" + Math.round(autoclicker_price * 0.8))
     }
-    local_menu_options.push("Buy for $" + autoclicker_price)
+    if (score >= autoclicker_price || debug) {
+        local_menu_options.push("Buy for $" + autoclicker_price)
+    }
     blockMenu.showMenu(local_menu_options, MenuStyle.List, MenuLocation.BottomLeft)
     wait_for_menu_select()
     if (blockMenu.selectedMenuOption().includes("Cancel")) {
@@ -127,12 +127,8 @@ function buy_autoclicker_menu () {
         autoclicker_count += -1
         score += Math.round(autoclicker_price * 0.8)
     } else if (blockMenu.selectedMenuOption().includes("Buy")) {
-        if (score >= autoclicker_price || debug) {
-            autoclicker_count += 1
-            score += autoclicker_price * -1
-        } else {
-            game.showLongText("Not enough points!", DialogLayout.Bottom)
-        }
+        autoclicker_count += 1
+        score += autoclicker_price * -1
     }
     autoclicker_price = 2
     for (let index = 0; index < autoclicker_count; index++) {
@@ -143,7 +139,7 @@ function buy_autoclicker_menu () {
 }
 spriteutils.createRenderable(0, function (screen2) {
     screen2.fillRect(0, 0, 160, 20, 15)
-    images.print(screen2, "Score: " + score, 2, 2, 1)
+    images.print(screen2, "MakeCoins: " + score, 2, 2, 1)
     images.print(screen2, "Target: " + magic_number, 2, 10, 1)
     screen2.drawLine(0, 20, 160, 20, 1)
 })
@@ -286,7 +282,7 @@ let computer_price = 0
 let computer_count = 0
 let local_menu_options: string[] = []
 let debug = false
-debug = true
+debug = false
 set_default_save()
 make_cursor()
 make_main_computer()
