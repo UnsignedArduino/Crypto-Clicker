@@ -23,7 +23,7 @@ function buy_computer_menu () {
             game.showLongText("Not enough points!", DialogLayout.Bottom)
         }
     }
-    computer_price = 50
+    computer_price = 10
     for (let index = 0; index < computer_count; index++) {
         computer_price = computer_price * 1.1
     }
@@ -84,7 +84,7 @@ function buy_autoclicker_menu () {
             game.showLongText("Not enough points!", DialogLayout.Bottom)
         }
     }
-    autoclicker_price = 10
+    autoclicker_price = 2
     for (let index = 0; index < autoclicker_count; index++) {
         autoclicker_price = autoclicker_price * 1.1
     }
@@ -200,10 +200,10 @@ max_height = 5
 magic_number = randint(0, max_height)
 autoclicker_count = 0
 let autoclicker_speed = 10000
-autoclicker_price = 10
+autoclicker_price = 2
 computer_count = 0
 let computer_speed = 1000
-computer_price = 50
+computer_price = 10
 make_cursor()
 make_main_computer()
 make_shop_buttons()
