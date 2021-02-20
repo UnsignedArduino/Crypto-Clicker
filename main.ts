@@ -176,6 +176,7 @@ function make_upgrade_obj (name: string, description: string, cost: number, id: 
     blockObject.setNumberProperty(local_requirements_obj, NumProp.asics, asics_needed)
     blockObject.setNumberProperty(local_requirements_obj, NumProp.hashes_per_sec, hashes_per_sec_needed)
     blockObject.setAnyProperty(local_upgrade_obj, AnyProp.requirements, local_requirements_obj)
+    all_upgrades.push(local_upgrade_obj)
     return local_upgrade_obj
 }
 function wait_for_menu_select () {
@@ -264,6 +265,14 @@ function make_buy_computer () {
     sprite_buy_computer = sprites.create(assets.image`buy_computer_button`, SpriteKind.Shop)
     sprite_buy_computer.top = 52
     sprite_buy_computer.left = 60
+}
+// name, description, cost, id, score needed, auto-clickers needed, computers needed, ASICs needed, hashes per second needed
+function define_upgrades () {
+    all_upgrades = []
+    make_upgrade_obj("C++ Based Automation", "Double the speed of cursors.", 10, 0, 5, 1, 0, 0, 0)
+    make_upgrade_obj("Make your own Autoclicker kits", "Halves the price of cursors.", 10, 1, 5, 2, 0, 0, 0)
+    make_upgrade_obj("Hardware Autoclickers", "Triple the speed of cursors.", 15, 2, 10, 3, 0, 0, 0)
+    make_upgrade_obj("Bulk-buying", "Halves the price of cursors.", 15, 3, 10, 5, 0, 0, 0)
 }
 function set_default_save () {
     show_particles = true
@@ -363,6 +372,7 @@ blockMenu.onMenuOptionSelected(function (option, index) {
 })
 let local_previous_magic_number = 0
 let selected = false
+let all_upgrades: blockObject.BlockObject[] = []
 let local_requirements_obj: blockObject.BlockObject = null
 let local_upgrade_obj: blockObject.BlockObject = null
 let sprite_cursor: Sprite = null
@@ -399,6 +409,7 @@ set_default_save()
 make_cursor()
 make_main_computer()
 make_buttons()
+define_upgrades()
 scene.setBackgroundColor(11)
 blockMenu.setColors(1, 15)
 load_progress()
