@@ -5,10 +5,18 @@ namespace SpriteKind {
 namespace NumProp {
     export const cost = NumProp.create()
     export const id = NumProp.create()
+    export const score = NumProp.create()
+    export const autoclickers = NumProp.create()
+    export const computers = NumProp.create()
+    export const asics = NumProp.create()
+    export const hashes_per_sec = NumProp.create()
 }
 namespace StrProp {
     export const name = StrProp.create()
     export const description = StrProp.create()
+}
+namespace AnyProp {
+    export const requirements = AnyProp.create()
 }
 function buy_computer_menu () {
     local_menu_options = ["Cancel"]
@@ -155,12 +163,20 @@ function make_cursor () {
     sprite_cursor_pointer.z = 50
     enable_cursor(true)
 }
-function make_upgrade_obj (name: string, description: string, cost: number, id: number) {
+function make_upgrade_obj (name: string, description: string, cost: number, id: number, score_needed: number, autoclickers_needed: number, computers_needed: number, asics_needed: number, hashes_per_sec_needed: number) {
     local_upgrade_obj = blockObject.create()
     blockObject.setStringProperty(local_upgrade_obj, StrProp.name, name)
     blockObject.setStringProperty(local_upgrade_obj, StrProp.description, description)
     blockObject.setNumberProperty(local_upgrade_obj, NumProp.cost, cost)
     blockObject.setNumberProperty(local_upgrade_obj, NumProp.id, id)
+    local_requirements_obj = blockObject.create()
+    blockObject.setNumberProperty(local_requirements_obj, NumProp.score, score_needed)
+    blockObject.setNumberProperty(local_requirements_obj, NumProp.autoclickers, autoclickers_needed)
+    blockObject.setNumberProperty(local_requirements_obj, NumProp.computers, computers_needed)
+    blockObject.setNumberProperty(local_requirements_obj, NumProp.asics, asics_needed)
+    blockObject.setNumberProperty(local_requirements_obj, NumProp.hashes_per_sec, hashes_per_sec_needed)
+    blockObject.setAnyProperty(local_upgrade_obj, AnyProp.requirements, local_requirements_obj)
+    return local_upgrade_obj
 }
 function wait_for_menu_select () {
     enable_cursor(false)
@@ -347,6 +363,7 @@ blockMenu.onMenuOptionSelected(function (option, index) {
 })
 let local_previous_magic_number = 0
 let selected = false
+let local_requirements_obj: blockObject.BlockObject = null
 let local_upgrade_obj: blockObject.BlockObject = null
 let sprite_cursor: Sprite = null
 let sprite_menu_button: Sprite = null
