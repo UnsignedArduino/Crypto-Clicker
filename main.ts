@@ -209,7 +209,11 @@ spriteutils.createRenderable(0, function (screen2) {
     images.print(screen2, "Have: " + asic_count, sprite_buy_asic.right + 4, sprite_buy_asic.bottom - 8, 1)
 })
 spriteutils.createRenderable(0, function (screen2) {
-    images.print(screen2, "H/S: " + hash_per_sec, sprite_upgrades_button.left, sprite_upgrades_button.top - 15, 1)
+    if (controller.B.isPressed()) {
+        images.print(screen2, "Raw H/S: " + hash_per_sec, sprite_upgrades_button.left, sprite_upgrades_button.top - 15, 1)
+    } else {
+        images.print(screen2, "H/S: " + average_hash_per_sec, sprite_upgrades_button.left, sprite_upgrades_button.top - 15, 1)
+    }
 })
 spriteutils.createRenderable(0, function (screen2) {
     screen2.drawLine(56, sprite_upgrades_button.top - 3, 160, sprite_upgrades_button.top - 3, 1)
@@ -255,6 +259,7 @@ function wipe_save () {
     set_default_save()
 }
 function computer_click () {
+    hash_count_per_sec += 1
     sprites.setDataNumber(sprite_computer, "next_number", randint(0, max_height))
     sprite_computer.say(convertToText(sprites.readDataNumber(sprite_computer, "next_number")))
     sprite_computer.setImage(assets.animation`computer_monitor_loading`[sprites.readDataNumber(sprite_computer, "loading_step")])
@@ -350,11 +355,13 @@ let score = 0
 let computer_price = 0
 let computer_count = 0
 let local_menu_options: string[] = []
+let average_hash_per_sec = 0
 let hash_per_sec = 0
 let debug = false
-debug = false
+debug = true
 let hash_count_per_sec = 0
 hash_per_sec = 0
+average_hash_per_sec = 0
 set_default_save()
 make_cursor()
 make_main_computer()
@@ -369,12 +376,13 @@ game.onUpdate(function () {
 game.onUpdateInterval(1000, function () {
     hash_per_sec = hash_count_per_sec
     hash_count_per_sec = 0
+    average_hash_per_sec += hash_per_sec
+    average_hash_per_sec = spriteutils.roundWithPrecision(average_hash_per_sec / 2, 2)
 })
 forever(function () {
     for (let index = 0; index <= autoclicker_count - 1; index++) {
         timer.throttle("autoclicker_click_" + index, autoclicker_speed, function () {
             computer_click()
-            hash_count_per_sec += 1
         })
     }
 })
