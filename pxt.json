@@ -9,7 +9,8 @@
         "arcade-text": "github:pelikhan/arcade-image-text#v0.0.4",
         "block-menu": "github:riknoll/arcade-custom-menu#v0.0.1",
         "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0",
-        "Notifications": "github:unsignedarduino/notifications#2a1dfa1a8c4ecf02cfb8b53521f82371a222e3e5"
+        "Notifications": "github:unsignedarduino/notifications#2a1dfa1a8c4ecf02cfb8b53521f82371a222e3e5",
+        "arcade-block-objects": "github:microsoft/arcade-block-objects#f486ac1d4dcc096b9297174f97f8cdef1576c7ff"
     },
     "files": [
         "main.blocks",

@@ -2,6 +2,14 @@ namespace SpriteKind {
     export const Thing = SpriteKind.create()
     export const Shop = SpriteKind.create()
 }
+namespace NumProp {
+    export const cost = NumProp.create()
+    export const id = NumProp.create()
+}
+namespace StrProp {
+    export const name = StrProp.create()
+    export const description = StrProp.create()
+}
 function buy_computer_menu () {
     local_menu_options = ["Cancel"]
     if (computer_count > 0) {
@@ -146,6 +154,13 @@ function make_cursor () {
     sprite_cursor.z = 50
     sprite_cursor_pointer.z = 50
     enable_cursor(true)
+}
+function make_upgrade_obj (name: string, description: string, cost: number, id: number) {
+    local_upgrade_obj = blockObject.create()
+    blockObject.setStringProperty(local_upgrade_obj, StrProp.name, name)
+    blockObject.setStringProperty(local_upgrade_obj, StrProp.description, description)
+    blockObject.setNumberProperty(local_upgrade_obj, NumProp.cost, cost)
+    blockObject.setNumberProperty(local_upgrade_obj, NumProp.id, id)
 }
 function wait_for_menu_select () {
     enable_cursor(false)
@@ -332,6 +347,7 @@ blockMenu.onMenuOptionSelected(function (option, index) {
 })
 let local_previous_magic_number = 0
 let selected = false
+let local_upgrade_obj: blockObject.BlockObject = null
 let sprite_cursor: Sprite = null
 let sprite_menu_button: Sprite = null
 let sprite_upgrades_button: Sprite = null
