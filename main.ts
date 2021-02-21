@@ -45,6 +45,9 @@ function buy_computer_menu () {
     move_till_not_touching(sprite_cursor_pointer, sprite_buy_computer, -1, 0)
 }
 function passed_requirements () {
+    if (debug) {
+        return true
+    }
     if (score < blockObject.getNumberProperty(local_requirements, NumProp.score)) {
         return false
     }
@@ -166,6 +169,17 @@ function buy_asic_menu () {
     }
     asic_price = Math.round(asic_price)
     move_till_not_touching(sprite_cursor_pointer, sprite_buy_asic, -1, 0)
+}
+function do_upgrade (id: number) {
+    if (id == 0) {
+        autoclicker_speed = autoclicker_speed * 0.5
+    } else if (id == 1) {
+        autoclicker_price = autoclicker_price * 0.5
+    } else if (id == 2) {
+        autoclicker_speed = autoclicker_speed * 0.333
+    } else if (id == 3) {
+        autoclicker_price = autoclicker_price * 0.5
+    }
 }
 function move_till_not_touching (sprite: Sprite, other_sprite: Sprite, dx: number, dy: number) {
     while (sprite.overlapsWith(other_sprite)) {
@@ -292,7 +306,6 @@ function define_upgrades () {
     make_upgrade_obj("Make your own Autoclicker kits", "Halves the price of cursors.", 10, 1, 5, 2, 0, 0, 0)
     make_upgrade_obj("Hardware Autoclickers", "Triple the speed of cursors.", 15, 2, 10, 3, 0, 0, 0)
     make_upgrade_obj("Bulk-buying", "Halves the price of cursors.", 15, 3, 10, 5, 0, 0, 0)
-    make_upgrade_obj("GPU additions", "Quadruples the speed of computers.", 500, 4, 250, 0, 10, 0, 0)
 }
 function set_default_save () {
     show_particles = true
@@ -403,7 +416,14 @@ function get_upgrades_menu () {
     if (blockMenu.selectedMenuOption().includes("Cancel")) {
     	
     } else {
-    	
+        local_upgrade_got = local_available_upgrades[blockMenu.selectedMenuIndex() - 1]
+        if (score >= blockObject.getNumberProperty(local_upgrade_got, NumProp.cost) || debug) {
+            score += blockObject.getNumberProperty(local_upgrade_got, NumProp.cost) * -1
+            do_upgrade(blockObject.getNumberProperty(local_upgrade_got, NumProp.id))
+            upgrades_obtained.push(blockObject.getNumberProperty(local_upgrade_got, NumProp.id))
+        } else {
+            game.showLongText("Not enough MakeCoins!", DialogLayout.Bottom)
+        }
     }
     move_till_not_touching(sprite_cursor_pointer, sprite_upgrades_button, 0, -1)
 }
@@ -416,6 +436,7 @@ function make_main_computer () {
 blockMenu.onMenuOptionSelected(function (option, index) {
     selected = true
 })
+let local_upgrade_got: blockObject.BlockObject = null
 let local_upgrades_shown = 0
 let local_available_upgrades: blockObject.BlockObject[] = []
 let local_previous_magic_number = 0
@@ -451,7 +472,7 @@ let local_menu_options: string[] = []
 let average_hash_per_sec = 0
 let hash_per_sec = 0
 let debug = false
-debug = true
+debug = false
 let hash_count_per_sec = 0
 hash_per_sec = 0
 average_hash_per_sec = 0
