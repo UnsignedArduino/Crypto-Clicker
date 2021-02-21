@@ -359,7 +359,18 @@ function check_for_magic_number (got: number) {
     }
 }
 function get_upgrades_menu () {
-	
+    local_menu_options = ["Cancel"]
+    local_available_upgrades = []
+    local_upgrades_shown = 0
+    for (let value of all_upgrades) {
+    	
+    }
+    blockMenu.showMenu(local_menu_options, MenuStyle.List, MenuLocation.FullScreen)
+    wait_for_menu_select()
+    if (blockMenu.selectedMenuOption().includes("Cancel")) {
+    	
+    }
+    move_till_not_touching(sprite_cursor_pointer, sprite_upgrades_button, 0, -1)
 }
 function make_main_computer () {
     sprite_computer = sprites.create(assets.image`computer_monitor`, SpriteKind.Thing)
@@ -370,6 +381,8 @@ function make_main_computer () {
 blockMenu.onMenuOptionSelected(function (option, index) {
     selected = true
 })
+let local_upgrades_shown = 0
+let local_available_upgrades: number[] = []
 let local_previous_magic_number = 0
 let selected = false
 let all_upgrades: blockObject.BlockObject[] = []
