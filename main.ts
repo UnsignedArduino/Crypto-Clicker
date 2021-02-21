@@ -96,6 +96,7 @@ function load_progress () {
     asic_count = blockSettings.readNumber("game_asic_count")
     asic_speed = blockSettings.readNumber("game_asic_speed")
     asic_price = blockSettings.readNumber("game_asic_price")
+    upgrades_obtained = blockSettings.readNumberArray("game_upgrades_obtained")
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (sprite_cursor_pointer.overlapsWith(sprite_computer)) {
@@ -308,6 +309,7 @@ function set_default_save () {
     asic_count = 0
     asic_speed = 200
     asic_price = 100
+    upgrades_obtained = []
 }
 function wipe_save () {
     for (let value of blockSettings.list()) {
@@ -352,6 +354,7 @@ function save_progress () {
     blockSettings.writeNumber("game_asic_count", asic_count)
     blockSettings.writeNumber("game_asic_speed", asic_speed)
     blockSettings.writeNumber("game_asic_price", asic_price)
+    blockSettings.writeNumberArray("game_upgrades_obtained", upgrades_obtained)
 }
 function enable_cursor (en: boolean) {
     if (en) {
@@ -382,6 +385,9 @@ function get_upgrades_menu () {
     local_available_upgrades = []
     local_upgrades_shown = 0
     for (let value of all_upgrades) {
+        if (upgrades_obtained.indexOf(blockObject.getNumberProperty(value, NumProp.id)) != -1) {
+            continue;
+        }
         local_requirements = blockObject.getAnyProperty(value, AnyProp.requirements)
         if (passed_requirements()) {
             local_available_upgrades.push(value)
@@ -422,6 +428,7 @@ let sprite_menu_button: Sprite = null
 let sprite_upgrades_button: Sprite = null
 let sprite_buy_autoclicker: Sprite = null
 let sprite_computer: Sprite = null
+let upgrades_obtained: number[] = []
 let asic_price = 0
 let asic_speed = 0
 let computer_speed = 0
