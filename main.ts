@@ -44,6 +44,24 @@ function buy_computer_menu () {
     computer_price = Math.round(computer_price)
     move_till_not_touching(sprite_cursor_pointer, sprite_buy_computer, -1, 0)
 }
+function passed_requirements () {
+    if (score < blockObject.getNumberProperty(local_requirements, NumProp.score)) {
+        return false
+    }
+    if (autoclicker_count < blockObject.getNumberProperty(local_requirements, NumProp.autoclickers)) {
+        return false
+    }
+    if (computer_count < blockObject.getNumberProperty(local_requirements, NumProp.computers)) {
+        return false
+    }
+    if (asic_count < blockObject.getNumberProperty(local_requirements, NumProp.asics)) {
+        return false
+    }
+    if (average_hash_per_sec < blockObject.getNumberProperty(local_requirements, NumProp.hashes_per_sec)) {
+        return false
+    }
+    return true
+}
 function make_buttons () {
     make_buy_autoclicker()
     make_buy_computer()
@@ -273,6 +291,7 @@ function define_upgrades () {
     make_upgrade_obj("Make your own Autoclicker kits", "Halves the price of cursors.", 10, 1, 5, 2, 0, 0, 0)
     make_upgrade_obj("Hardware Autoclickers", "Triple the speed of cursors.", 15, 2, 10, 3, 0, 0, 0)
     make_upgrade_obj("Bulk-buying", "Halves the price of cursors.", 15, 3, 10, 5, 0, 0, 0)
+    make_upgrade_obj("GPU additions", "Quadruples the speed of computers.", 500, 4, 250, 0, 10, 0, 0)
 }
 function set_default_save () {
     show_particles = true
@@ -363,11 +382,21 @@ function get_upgrades_menu () {
     local_available_upgrades = []
     local_upgrades_shown = 0
     for (let value of all_upgrades) {
-    	
+        local_requirements = blockObject.getAnyProperty(value, AnyProp.requirements)
+        if (passed_requirements()) {
+            local_available_upgrades.push(value)
+            local_menu_options.push("" + blockObject.getStringProperty(value, StrProp.name) + ": ($" + blockObject.getNumberProperty(value, NumProp.cost) + ") " + blockObject.getStringProperty(value, StrProp.description))
+            local_upgrades_shown += 1
+        }
+        if (local_upgrades_shown >= 11) {
+            break;
+        }
     }
     blockMenu.showMenu(local_menu_options, MenuStyle.List, MenuLocation.FullScreen)
     wait_for_menu_select()
     if (blockMenu.selectedMenuOption().includes("Cancel")) {
+    	
+    } else {
     	
     }
     move_till_not_touching(sprite_cursor_pointer, sprite_upgrades_button, 0, -1)
@@ -382,7 +411,7 @@ blockMenu.onMenuOptionSelected(function (option, index) {
     selected = true
 })
 let local_upgrades_shown = 0
-let local_available_upgrades: number[] = []
+let local_available_upgrades: blockObject.BlockObject[] = []
 let local_previous_magic_number = 0
 let selected = false
 let all_upgrades: blockObject.BlockObject[] = []
@@ -395,16 +424,17 @@ let sprite_buy_autoclicker: Sprite = null
 let sprite_computer: Sprite = null
 let asic_price = 0
 let asic_speed = 0
-let asic_count = 0
 let computer_speed = 0
 let autoclicker_price = 0
 let autoclicker_speed = 0
-let autoclicker_count = 0
 let magic_number = 0
 let max_height = 0
 let score_change = 0
 let show_particles = false
 let sprite_buy_asic: Sprite = null
+let asic_count = 0
+let autoclicker_count = 0
+let local_requirements: blockObject.BlockObject = null
 let sprite_buy_computer: Sprite = null
 let sprite_cursor_pointer: Sprite = null
 let score = 0
