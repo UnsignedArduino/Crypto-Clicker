@@ -297,7 +297,7 @@ spriteutils.createRenderable(0, function (screen2) {
 })
 spriteutils.createRenderable(0, function (screen2) {
     if (controller.B.isPressed()) {
-        images.print(screen2, "Raw H/S: " + hash_per_sec, sprite_upgrades_button.left, sprite_upgrades_button.top - 15, 1)
+        images.print(screen2, "T/S: " + ticks_per_second + "/" + max_ticks_per_second, sprite_upgrades_button.left, sprite_upgrades_button.top - 15, 1)
     } else {
         images.print(screen2, "H/S: " + average_hash_per_sec, sprite_upgrades_button.left, sprite_upgrades_button.top - 15, 1)
     }
@@ -503,11 +503,15 @@ let computer_price = 0
 let computer_count = 0
 let local_menu_options: string[] = []
 let average_hash_per_sec = 0
-let hash_per_sec = 0
+let ticks_per_second = 0
+let max_ticks_per_second = 0
 let debug = false
 debug = false
+max_ticks_per_second = 20
+let raw_tick_count = 0
+ticks_per_second = 0
 let hash_count_per_sec = 0
-hash_per_sec = 0
+let hash_per_sec = 0
 average_hash_per_sec = 0
 set_default_save()
 make_cursor()
@@ -526,27 +530,28 @@ game.onUpdateInterval(1000, function () {
     hash_count_per_sec = 0
     average_hash_per_sec += hash_per_sec
     average_hash_per_sec = spriteutils.roundWithPrecision(average_hash_per_sec / 2, 2)
+    ticks_per_second = raw_tick_count
+    raw_tick_count = 0
 })
 forever(function () {
-    for (let index = 0; index <= autoclicker_count - 1; index++) {
-        timer.throttle("autoclicker_click_" + index, autoclicker_speed, function () {
-            computer_click()
-        })
-    }
-})
-forever(function () {
-    for (let index = 0; index <= computer_count - 1; index++) {
-        timer.throttle("computer_mine_" + index, computer_speed, function () {
-            check_for_magic_number(randint(0, max_height))
-            hash_count_per_sec += 1
-        })
-    }
-})
-forever(function () {
-    for (let index = 0; index <= asic_count - 1; index++) {
-        timer.throttle("asic_mine_" + index, asic_speed, function () {
-            check_for_magic_number(randint(0, max_height))
-            hash_count_per_sec += 1
-        })
-    }
+    timer.throttle("tick", 1000 / max_ticks_per_second, function () {
+        for (let index = 0; index <= autoclicker_count - 1; index++) {
+            timer.throttle("autoclicker_click_" + index, autoclicker_speed, function () {
+                computer_click()
+            })
+        }
+        for (let index = 0; index <= computer_count - 1; index++) {
+            timer.throttle("computer_mine_" + index, computer_speed, function () {
+                check_for_magic_number(randint(0, max_height))
+                hash_count_per_sec += 1
+            })
+        }
+        for (let index = 0; index <= asic_count - 1; index++) {
+            timer.throttle("asic_mine_" + index, asic_speed, function () {
+                check_for_magic_number(randint(0, max_height))
+                hash_count_per_sec += 1
+            })
+        }
+        raw_tick_count += 1
+    })
 })
