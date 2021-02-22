@@ -33,12 +33,10 @@ function buy_computer_menu () {
     } else if (blockMenu.selectedMenuOption().includes("Sell")) {
         computer_count += -1
         score += Math.round(computer_price * 0.8)
+        computer_price = computer_price / 1.1
     } else if (blockMenu.selectedMenuOption().includes("Buy")) {
         computer_count += 1
         score += computer_price * -1
-    }
-    computer_price = 10
-    for (let index = 0; index < computer_count; index++) {
         computer_price = computer_price * 1.1
     }
     computer_price = Math.round(computer_price)
@@ -159,12 +157,10 @@ function buy_asic_menu () {
     } else if (blockMenu.selectedMenuOption().includes("Sell")) {
         asic_count += -1
         score += Math.round(asic_price * 0.8)
+        asic_price = asic_price / 1.1
     } else if (blockMenu.selectedMenuOption().includes("Buy")) {
         asic_count += 1
         score += asic_price * -1
-    }
-    asic_price = 100
-    for (let index = 0; index < asic_count; index++) {
         asic_price = asic_price * 1.1
     }
     asic_price = Math.round(asic_price)
@@ -264,12 +260,10 @@ function buy_autoclicker_menu () {
     } else if (blockMenu.selectedMenuOption().includes("Sell")) {
         autoclicker_count += -1
         score += Math.round(autoclicker_price * 0.8)
+        autoclicker_price = autoclicker_price / 1.1
     } else if (blockMenu.selectedMenuOption().includes("Buy")) {
         autoclicker_count += 1
         score += autoclicker_price * -1
-    }
-    autoclicker_price = 2
-    for (let index = 0; index < autoclicker_count; index++) {
         autoclicker_price = autoclicker_price * 1.1
     }
     autoclicker_price = Math.round(autoclicker_price)
