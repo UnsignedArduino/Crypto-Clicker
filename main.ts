@@ -179,7 +179,25 @@ function do_upgrade (id: number) {
         autoclicker_speed = autoclicker_speed * 0.333
     } else if (id == 3) {
         autoclicker_price = autoclicker_price * 0.5
+    } else if (id == 4) {
+        autoclicker_speed = autoclicker_speed * 0.25
+    } else if (id == 5) {
+        computer_speed = computer_speed * 0.5
+    } else if (id == 6) {
+        computer_speed = computer_speed * 0.333
+    } else if (id == 7) {
+        computer_price = computer_price * 0.5
+    } else if (id == 8) {
+        computer_speed = computer_speed * 0.166
+    } else if (id == 9) {
+        computer_speed = computer_speed * 0.333
     }
+    autoclicker_speed = Math.floor(autoclicker_speed)
+    computer_speed = Math.floor(computer_speed)
+    asic_speed = Math.floor(asic_speed)
+    autoclicker_price = Math.floor(autoclicker_price)
+    computer_price = Math.floor(computer_price)
+    asic_price = Math.floor(asic_price)
 }
 function move_till_not_touching (sprite: Sprite, other_sprite: Sprite, dx: number, dy: number) {
     while (sprite.overlapsWith(other_sprite)) {
@@ -305,7 +323,13 @@ function define_upgrades () {
     make_upgrade_obj("C++ Based Automation", "Double the speed of cursors.", 10, 0, 5, 1, 0, 0, 0)
     make_upgrade_obj("Make your own Autoclicker kits", "Halves the price of cursors.", 10, 1, 5, 2, 0, 0, 0)
     make_upgrade_obj("Hardware Autoclickers", "Triple the speed of cursors.", 15, 2, 10, 3, 0, 0, 0)
-    make_upgrade_obj("Bulk-buying", "Halves the price of cursors.", 15, 3, 10, 5, 0, 0, 0)
+    make_upgrade_obj("Discounted Cursors", "Halves the price of cursors.", 15, 3, 10, 5, 0, 0, 0)
+    make_upgrade_obj("USB 3.0 Cursors", "Quadruples the speed of cursors.", 20, 4, 10, 5, 0, 0, 0)
+    make_upgrade_obj("Faster Mining Software", "Doubles the speed of computers.", 20, 5, 15, 0, 2, 0, 0)
+    make_upgrade_obj("Switch to Linux", "Triples the speed of computers.", 30, 6, 20, 0, 5, 0, 0)
+    make_upgrade_obj("Direct from the Factory", "Halves the price of computers.", 30, 7, 25, 0, 5, 0, 0)
+    make_upgrade_obj("External GPUs", "Sextuples (x6!) the speed of computers.", 60, 8, 30, 0, 10, 0, 0)
+    make_upgrade_obj("PCI Express buses", "Triples the speed of computers.", 40, 9, 30, 0, 10, 0, 0)
 }
 function set_default_save () {
     show_particles = true
