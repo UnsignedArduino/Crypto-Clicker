@@ -191,6 +191,16 @@ function do_upgrade (id: number) {
         computer_speed = computer_speed * 0.166
     } else if (id == 9) {
         computer_speed = computer_speed * 0.333
+    } else if (id == 10) {
+        asic_speed = asic_speed * 0.5
+    } else if (id == 11) {
+        asic_price = asic_price * 0.5
+    } else if (id == 12) {
+        asic_speed = asic_speed * 0.333
+    } else if (id == 13) {
+        asic_speed = asic_speed * 0.5
+    } else if (id == 14) {
+        asic_price = asic_price * 0.5
     }
     autoclicker_speed = Math.floor(autoclicker_speed)
     computer_speed = Math.floor(computer_speed)
@@ -330,6 +340,11 @@ function define_upgrades () {
     make_upgrade_obj("Direct from the Factory", "Halves the price of computers.", 30, 7, 25, 0, 5, 0, 0)
     make_upgrade_obj("External GPUs", "Sextuples (x6!) the speed of computers.", 60, 8, 30, 0, 10, 0, 0)
     make_upgrade_obj("PCI Express buses", "Triples the speed of computers.", 40, 9, 30, 0, 10, 0, 0)
+    make_upgrade_obj("Water cooling", "Doubles the speed of ASICs.", 75, 10, 50, 0, 0, 3, 0)
+    make_upgrade_obj("Bulk buying", "Halves the price of ASICs.", 50, 11, 50, 0, 0, 5, 0)
+    make_upgrade_obj("Firmware updates", "Triples the speed of ASICs.", 100, 12, 80, 0, 0, 5, 0)
+    make_upgrade_obj("Improved ventilation", "Doubles the speed of ASICs.", 80, 13, 80, 0, 0, 5, 0)
+    make_upgrade_obj("FPGAs are cheaper", "Halves the price of ASICs.", 100, 14, 80, 0, 0, 10, 0)
 }
 function set_default_save () {
     show_particles = true
