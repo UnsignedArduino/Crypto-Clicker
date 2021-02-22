@@ -555,3 +555,14 @@ forever(function () {
         raw_tick_count += 1
     })
 })
+forever(function () {
+    if (Math.floor(average_hash_per_sec) >= max_height) {
+        while (Math.floor(average_hash_per_sec) >= max_height) {
+            max_height = Math.floor(max_height * 1.5)
+            score_change = Math.ceil(score_change * 1.5)
+        }
+        Notification.waitForNotificationFinish()
+        Notification.notify("Difficulty has been set to " + max_height + "!" + " (Reward is $" + score_change + ")", assets.image`star`)
+    }
+    pause(1000)
+})

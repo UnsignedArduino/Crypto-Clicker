@@ -49,6 +49,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "buy_asic_button"
     },
+    "image11": {
+        "data": "hwQIAAgAAAAAUABQAFAFVQBVVVVVVVUFVVVVBQBVVVUAUAVVAFAAUA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "star"
+    },
     "anim1": {
         "namespace": "myAnimations",
         "id": "anim1",
