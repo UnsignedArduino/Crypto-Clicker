@@ -142,6 +142,14 @@ function menu_menu () {
     }
     move_till_not_touching(sprite_cursor_pointer, sprite_menu_button, 0, -1)
 }
+function sprite_overlapping_kind (sprite: Sprite, kind: number) {
+    for (let value of sprites.allOfKind(kind)) {
+        if (sprite.overlapsWith(value)) {
+            return true
+        }
+    }
+    return false
+}
 function buy_asic_menu () {
     local_menu_options = ["Cancel"]
     if (asic_count > 0) {
@@ -408,6 +416,8 @@ function enable_cursor (en: boolean) {
     } else {
         controller.moveSprite(sprite_cursor_pointer, 0, 0)
     }
+    sprite_cursor_pointer.setFlag(SpriteFlag.Invisible, !(en))
+    sprite_cursor.setFlag(SpriteFlag.Invisible, !(en))
 }
 function make_menu_button () {
     sprite_menu_button = sprites.create(assets.image`menu_button`, SpriteKind.Shop)
@@ -524,6 +534,18 @@ load_progress()
 game.onUpdate(function () {
     sprite_cursor.top = sprite_cursor_pointer.top
     sprite_cursor.left = sprite_cursor_pointer.left
+})
+game.onUpdate(function () {
+    if (controller.A.isPressed()) {
+        sprite_cursor.image.replace(1, 8)
+        sprite_cursor.image.replace(9, 8)
+    } else if (sprite_overlapping_kind(sprite_cursor_pointer, SpriteKind.Thing) || sprite_overlapping_kind(sprite_cursor_pointer, SpriteKind.Shop)) {
+        sprite_cursor.image.replace(1, 9)
+        sprite_cursor.image.replace(8, 9)
+    } else {
+        sprite_cursor.image.replace(9, 1)
+        sprite_cursor.image.replace(8, 1)
+    }
 })
 game.onUpdateInterval(1000, function () {
     hash_per_sec = hash_count_per_sec
