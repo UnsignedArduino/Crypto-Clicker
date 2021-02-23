@@ -63,6 +63,48 @@ function passed_requirements () {
     }
     return true
 }
+function number_to_si_divider (num: number) {
+    if (num > 1e+24) {
+        return 1e+24
+    } else if (num > 1e+21) {
+        return 1e+21
+    } else if (num > 1000000000000000000) {
+        return 1000000000000000000
+    } else if (num > 1000000000000000) {
+        return 1000000000000000
+    } else if (num > 1000000000000) {
+        return 1000000000000
+    } else if (num > 1000000000) {
+        return 1000000000
+    } else if (num > 1000000) {
+        return 1000000
+    } else if (num > 1000) {
+        return 1000
+    } else {
+        return 1
+    }
+}
+function number_to_si_prefix (num: number) {
+    if (num > 1e+24) {
+        return "Y"
+    } else if (num > 1e+21) {
+        return "Z"
+    } else if (num > 1000000000000000000) {
+        return "E"
+    } else if (num > 1000000000000000) {
+        return "P"
+    } else if (num > 1000000000000) {
+        return "T"
+    } else if (num > 1000000000) {
+        return "G"
+    } else if (num > 1000000) {
+        return "M"
+    } else if (num > 1000) {
+        return "k"
+    } else {
+        return ""
+    }
+}
 function make_buttons () {
     make_buy_autoclicker()
     make_buy_computer()
@@ -307,7 +349,7 @@ spriteutils.createRenderable(0, function (screen2) {
     if (controller.B.isPressed()) {
         images.print(screen2, "T/S: " + ticks_per_second + "/" + max_ticks_per_second, sprite_upgrades_button.left, sprite_upgrades_button.top - 15, 1)
     } else {
-        images.print(screen2, "H/S: " + average_hash_per_sec, sprite_upgrades_button.left, sprite_upgrades_button.top - 15, 1)
+        images.print(screen2, pretty_hashes_per_sec(average_hash_per_sec), sprite_upgrades_button.left, sprite_upgrades_button.top - 15, 1)
     }
 })
 spriteutils.createRenderable(0, function (screen2) {
@@ -479,6 +521,9 @@ function make_main_computer () {
 blockMenu.onMenuOptionSelected(function (option, index) {
     selected = true
 })
+function pretty_hashes_per_sec (hashes_per_sec: number) {
+    return "" + number_to_si_prefix(hashes_per_sec) + "H/S: " + spriteutils.roundWithPrecision(hashes_per_sec / number_to_si_divider(hashes_per_sec), 2)
+}
 let local_upgrade_got: blockObject.BlockObject = null
 let local_upgrades_shown = 0
 let local_available_upgrades: blockObject.BlockObject[] = []
@@ -516,7 +561,7 @@ let average_hash_per_sec = 0
 let ticks_per_second = 0
 let max_ticks_per_second = 0
 let debug = false
-debug = false
+debug = true
 max_ticks_per_second = 20
 let raw_tick_count = 0
 ticks_per_second = 0
