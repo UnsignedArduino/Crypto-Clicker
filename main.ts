@@ -143,6 +143,7 @@ function load_progress () {
     difficulty_halve_time_left = blockSettings.readNumber("game_difficulty_halve_time_left")
     difficulty_halve_max_time = blockSettings.readNumber("game_difficulty_halve_max_time")
     difficulty_halve_chance = blockSettings.readNumber("game_difficulty_halve_chance")
+    difficulty_halving = read_bool("game_difficulty_halving")
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (sprite_cursor_pointer.overlapsWith(sprite_computer)) {
@@ -157,6 +158,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         get_upgrades_menu()
     } else if (sprite_cursor_pointer.overlapsWith(sprite_menu_button)) {
         menu_menu()
+    } else if (sprite_overlapping_kind(sprite_cursor_pointer, SpriteKind.Thing)) {
+        difficulty_halving = true
     }
 })
 function menu_menu () {
@@ -194,6 +197,9 @@ function sprite_overlapping_kind (sprite: Sprite, kind: number) {
         }
     }
     return false
+}
+function read_bool (name: string) {
+    return blockSettings.readNumber(name) == 1
 }
 function buy_asic_menu () {
     local_menu_options = ["Cancel"]
@@ -412,6 +418,7 @@ function set_default_save () {
     difficulty_halve_time_left = 0
     difficulty_halve_max_time = 30
     difficulty_halve_chance = 1
+    difficulty_halving = false
 }
 function wipe_save () {
     for (let value of blockSettings.list()) {
@@ -469,6 +476,7 @@ function save_progress () {
     blockSettings.writeNumber("game_difficulty_halve_time_left", difficulty_halve_time_left)
     blockSettings.writeNumber("game_difficulty_halve_max_time", difficulty_halve_max_time)
     blockSettings.writeNumber("game_difficulty_halve_chance", difficulty_halve_chance)
+    save_bool("game_difficulty_halving", difficulty_halving)
 }
 function enable_cursor (en: boolean) {
     if (en) {
@@ -478,6 +486,13 @@ function enable_cursor (en: boolean) {
     }
     sprite_cursor_pointer.setFlag(SpriteFlag.Invisible, !(en))
     sprite_cursor.setFlag(SpriteFlag.Invisible, !(en))
+}
+function save_bool (name: string, value: boolean) {
+    if (value) {
+        blockSettings.writeNumber(name, 0)
+    } else {
+        blockSettings.writeNumber(name, 1)
+    }
 }
 function make_menu_button () {
     sprite_menu_button = sprites.create(assets.image`menu_button`, SpriteKind.Shop)
@@ -510,7 +525,7 @@ function get_upgrades_menu () {
             local_menu_options.push("" + blockObject.getStringProperty(value, StrProp.name) + ": ($" + blockObject.getNumberProperty(value, NumProp.cost) + ") " + blockObject.getStringProperty(value, StrProp.description))
             local_upgrades_shown += 1
         }
-        if (local_upgrades_shown >= 11) {
+        if (local_upgrades_shown >= 10) {
             break;
         }
     }
@@ -542,6 +557,7 @@ blockMenu.onMenuOptionSelected(function (option, index) {
 function pretty_hashes_per_sec (hashes_per_sec: number) {
     return "" + number_to_si_prefix(hashes_per_sec) + "H/S: " + spriteutils.roundWithPrecision(hashes_per_sec / number_to_si_divider(hashes_per_sec), 2)
 }
+let sprite_difficulty_halver: Sprite = null
 let local_upgrade_got: blockObject.BlockObject = null
 let local_upgrades_shown = 0
 let local_available_upgrades: blockObject.BlockObject[] = []
@@ -556,6 +572,7 @@ let sprite_menu_button: Sprite = null
 let sprite_upgrades_button: Sprite = null
 let sprite_buy_autoclicker: Sprite = null
 let sprite_computer: Sprite = null
+let difficulty_halving = false
 let difficulty_halve_chance = 0
 let difficulty_halve_max_time = 0
 let difficulty_halve_time_left = 0
@@ -662,7 +679,19 @@ forever(function () {
             score_change = Math.ceil(score_change * 1.5)
         }
         Notification.waitForNotificationFinish()
-        Notification.notify("Difficulty has been set to " + max_height + "!" + " (Reward is $" + score_change + ")", assets.image`star`)
+        Notification.notify("Difficulty has been set to " + max_height + "!" + " (Reward is $" + score_change + ")", assets.image`arrow`)
+    }
+    pause(1000)
+})
+forever(function () {
+    if ((Math.percentChance(difficulty_halve_chance) || true) && difficulty_halve_time_left <= 0) {
+        sprite_difficulty_halver = sprites.create(assets.image`difficulty_halver`, SpriteKind.Thing)
+        sprite_difficulty_halver.z = 30
+        sprite_difficulty_halver.setPosition(randint(0, scene.screenWidth()), randint(0, scene.screenHeight()))
+        sprite_difficulty_halver.setStayInScreen(true)
+        sprite_difficulty_halver.startEffect(effects.halo, 1750)
+        sprite_difficulty_halver.lifespan = 10000
+        pause(10000)
     }
     pause(1000)
 })
