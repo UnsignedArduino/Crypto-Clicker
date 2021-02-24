@@ -415,6 +415,15 @@ function wipe_save () {
     }
     set_default_save()
 }
+function overlapped_sprites (sprite: Sprite, kind: number) {
+    local_overlapping_sprites = []
+    for (let value of sprites.allOfKind(kind)) {
+        if (sprite.overlapsWith(value)) {
+            local_overlapping_sprites.push(value)
+        }
+    }
+    return local_overlapping_sprites
+}
 function computer_click () {
     hash_count_per_sec += 1
     sprites.setDataNumber(sprite_computer, "next_number", randint(0, max_height))
@@ -528,6 +537,7 @@ let local_upgrade_got: blockObject.BlockObject = null
 let local_upgrades_shown = 0
 let local_available_upgrades: blockObject.BlockObject[] = []
 let local_previous_magic_number = 0
+let local_overlapping_sprites: Sprite[] = []
 let selected = false
 let all_upgrades: blockObject.BlockObject[] = []
 let local_requirements_obj: blockObject.BlockObject = null
@@ -584,12 +594,23 @@ game.onUpdate(function () {
     if (controller.A.isPressed()) {
         sprite_cursor.image.replace(1, 8)
         sprite_cursor.image.replace(9, 8)
+        for (let value of overlapped_sprites(sprite_cursor_pointer, SpriteKind.Shop)) {
+            value.image.replace(9, 8)
+        }
     } else if (sprite_overlapping_kind(sprite_cursor_pointer, SpriteKind.Thing) || sprite_overlapping_kind(sprite_cursor_pointer, SpriteKind.Shop)) {
         sprite_cursor.image.replace(1, 9)
         sprite_cursor.image.replace(8, 9)
     } else {
         sprite_cursor.image.replace(9, 1)
         sprite_cursor.image.replace(8, 1)
+    }
+    for (let value of sprites.allOfKind(SpriteKind.Shop)) {
+        if (sprite_cursor_pointer.overlapsWith(value)) {
+            value.image.replace(1, 9)
+        } else {
+            value.image.replace(8, 9)
+            value.image.replace(9, 1)
+        }
     }
 })
 game.onUpdateInterval(1000, function () {
