@@ -148,6 +148,8 @@ function load_progress () {
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (sprite_cursor_pointer.overlapsWith(sprite_computer)) {
         computer_click()
+    } else if (sprite_overlapping_kind(sprite_cursor_pointer, SpriteKind.Thing)) {
+        difficulty_halving = true
     } else if (sprite_cursor_pointer.overlapsWith(sprite_buy_autoclicker)) {
         buy_autoclicker_menu()
     } else if (sprite_cursor_pointer.overlapsWith(sprite_buy_computer)) {
@@ -158,8 +160,6 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         get_upgrades_menu()
     } else if (sprite_cursor_pointer.overlapsWith(sprite_menu_button)) {
         menu_menu()
-    } else if (sprite_overlapping_kind(sprite_cursor_pointer, SpriteKind.Thing)) {
-        difficulty_halving = true
     }
 })
 function menu_menu () {
