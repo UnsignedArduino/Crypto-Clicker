@@ -140,6 +140,9 @@ function load_progress () {
     asic_speed = blockSettings.readNumber("game_asic_speed")
     asic_price = blockSettings.readNumber("game_asic_price")
     upgrades_obtained = blockSettings.readNumberArray("game_upgrades_obtained")
+    difficulty_halve_time_left = blockSettings.readNumber("game_difficulty_halve_time_left")
+    difficulty_halve_max_time = blockSettings.readNumber("game_difficulty_halve_max_time")
+    difficulty_halve_chance = blockSettings.readNumber("game_difficulty_halve_chance")
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (sprite_cursor_pointer.overlapsWith(sprite_computer)) {
@@ -406,6 +409,9 @@ function set_default_save () {
     asic_speed = 200
     asic_price = 100
     upgrades_obtained = []
+    difficulty_halve_time_left = 0
+    difficulty_halve_max_time = 30
+    difficulty_halve_chance = 1
 }
 function wipe_save () {
     for (let value of blockSettings.list()) {
@@ -460,6 +466,9 @@ function save_progress () {
     blockSettings.writeNumber("game_asic_speed", asic_speed)
     blockSettings.writeNumber("game_asic_price", asic_price)
     blockSettings.writeNumberArray("game_upgrades_obtained", upgrades_obtained)
+    blockSettings.writeNumber("game_difficulty_halve_time_left", difficulty_halve_time_left)
+    blockSettings.writeNumber("game_difficulty_halve_max_time", difficulty_halve_max_time)
+    blockSettings.writeNumber("game_difficulty_halve_chance", difficulty_halve_chance)
 }
 function enable_cursor (en: boolean) {
     if (en) {
@@ -547,6 +556,9 @@ let sprite_menu_button: Sprite = null
 let sprite_upgrades_button: Sprite = null
 let sprite_buy_autoclicker: Sprite = null
 let sprite_computer: Sprite = null
+let difficulty_halve_chance = 0
+let difficulty_halve_max_time = 0
+let difficulty_halve_time_left = 0
 let upgrades_obtained: number[] = []
 let asic_price = 0
 let asic_speed = 0
