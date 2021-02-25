@@ -180,7 +180,7 @@ function menu_menu () {
             Notification.notify("Saved progress!", assets.image`floppy_disc`)
         })
     } else if (blockMenu.selectedMenuOption().includes("Wipe")) {
-        if (game.ask("Are you sure you", "want to wipe save?")) {
+        if (game.ask("Are you sure you want to", "wipe your save?")) {
             wipe_save()
             timer.background(function () {
                 Notification.waitForNotificationFinish()
@@ -334,9 +334,9 @@ spriteutils.createRenderable(0, function (screen2) {
     screen2.fillRect(0, 0, 160, 20, 15)
     images.print(screen2, "MakeCoins: " + score, 2, 2, 1)
     if (difficulty_halving) {
-        images.print(screen2, "Target: " + magic_number + "/" + max_height + " (" + difficulty_halve_time_left + ")", 2, 10, 1)
+        images.print(screen2, "Target: " + magic_number + " (" + difficulty_halve_time_left + ")", 2, 10, 1)
     } else {
-        images.print(screen2, "Target: " + magic_number + "/" + max_height, 2, 10, 1)
+        images.print(screen2, "Target: " + magic_number, 2, 10, 1)
     }
     screen2.drawLine(0, 20, 160, 20, 1)
 })
@@ -424,7 +424,7 @@ function set_default_save () {
     old_difficulty = max_height
     difficulty_halve_time_left = 0
     difficulty_halve_max_time = 30
-    difficulty_halve_chance = 1
+    difficulty_halve_chance = 2
     difficulty_halving = false
 }
 function wipe_save () {
@@ -553,6 +553,15 @@ function get_upgrades_menu () {
     }
     move_till_not_touching(sprite_cursor_pointer, sprite_upgrades_button, 0, -1)
 }
+function make_difficulty_halving_status () {
+    sprite_difficulty_halving_status_bar = statusbars.create(52, 2, StatusBarKind.Energy)
+    sprite_difficulty_halving_status_bar.top = 22
+    sprite_difficulty_halving_status_bar.left = 2
+    sprite_difficulty_halving_status_bar.z = 0
+    sprite_difficulty_halving_status_bar.setColor(7, 2, 5)
+    sprite_difficulty_halving_status_bar.max = difficulty_halve_max_time
+    sprite_difficulty_halving_status_bar.value = 0
+}
 function make_main_computer () {
     sprite_computer = sprites.create(assets.image`computer_monitor`, SpriteKind.Thing)
     sprite_computer.left = 16
@@ -566,6 +575,7 @@ function pretty_hashes_per_sec (hashes_per_sec: number) {
     return "" + number_to_si_prefix(hashes_per_sec) + "H/S: " + spriteutils.roundWithPrecision(hashes_per_sec / number_to_si_divider(hashes_per_sec), 2)
 }
 let sprite_difficulty_halver: Sprite = null
+let sprite_difficulty_halving_status_bar: StatusBarSprite = null
 let local_upgrade_got: blockObject.BlockObject = null
 let local_upgrades_shown = 0
 let local_available_upgrades: blockObject.BlockObject[] = []
@@ -609,7 +619,7 @@ let average_hash_per_sec = 0
 let ticks_per_second = 0
 let max_ticks_per_second = 0
 let debug = false
-debug = true
+debug = false
 max_ticks_per_second = 20
 let raw_tick_count = 0
 ticks_per_second = 0
@@ -624,6 +634,7 @@ define_upgrades()
 scene.setBackgroundColor(11)
 blockMenu.setColors(1, 15)
 load_progress()
+make_difficulty_halving_status()
 game.onUpdate(function () {
     sprite_cursor.top = sprite_cursor_pointer.top
     sprite_cursor.left = sprite_cursor_pointer.left
@@ -694,13 +705,14 @@ forever(function () {
 })
 forever(function () {
     if ((Math.percentChance(difficulty_halve_chance) || false) && !(difficulty_halving)) {
-        sprite_difficulty_halver = sprites.create(assets.image`difficulty_halver`, SpriteKind.Thing)
-        sprite_difficulty_halver.z = 30
-        sprite_difficulty_halver.setPosition(randint(0, scene.screenWidth()), randint(0, scene.screenHeight()))
-        sprite_difficulty_halver.setStayInScreen(true)
-        sprite_difficulty_halver.startEffect(effects.halo, 1750)
-        sprite_difficulty_halver.lifespan = 10000
-        pause(10000)
+        timer.throttle("summon_difficulty_halver", 10000, function () {
+            sprite_difficulty_halver = sprites.create(assets.image`difficulty_halver`, SpriteKind.Thing)
+            sprite_difficulty_halver.z = 30
+            sprite_difficulty_halver.setPosition(randint(0, scene.screenWidth()), randint(0, scene.screenHeight()))
+            sprite_difficulty_halver.setStayInScreen(true)
+            sprite_difficulty_halver.startEffect(effects.halo, 1750)
+            sprite_difficulty_halver.lifespan = 10000
+        })
     }
     if (difficulty_halving && difficulty_halve_time_left == 0) {
         Notification.waitForNotificationFinish()
@@ -719,4 +731,8 @@ forever(function () {
         difficulty_halving = false
     }
     pause(1000)
+})
+forever(function () {
+    sprite_difficulty_halving_status_bar.setFlag(SpriteFlag.Invisible, !(difficulty_halving))
+    sprite_difficulty_halving_status_bar.value = difficulty_halve_time_left
 })
