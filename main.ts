@@ -733,6 +733,6 @@ forever(function () {
     pause(1000)
 })
 forever(function () {
-    sprite_difficulty_halving_status_bar.setFlag(SpriteFlag.Invisible, !(difficulty_halving))
     sprite_difficulty_halving_status_bar.value = difficulty_halve_time_left
+    sprite_difficulty_halving_status_bar.setFlag(SpriteFlag.Invisible, !(difficulty_halving))
 })
