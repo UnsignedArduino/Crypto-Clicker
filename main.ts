@@ -140,6 +140,7 @@ function load_progress () {
     asic_speed = blockSettings.readNumber("game_asic_speed")
     asic_price = blockSettings.readNumber("game_asic_price")
     upgrades_obtained = blockSettings.readNumberArray("game_upgrades_obtained")
+    difficulty_halver_popup_time = blockSettings.readNumber("game_difficulty_halver_popup_time")
     old_difficulty = blockSettings.readNumber("game_old_difficulty")
     difficulty_halve_time_left = blockSettings.readNumber("game_difficulty_halve_time_left")
     difficulty_halve_max_time = blockSettings.readNumber("game_difficulty_halve_max_time")
@@ -421,6 +422,7 @@ function set_default_save () {
     asic_speed = 200
     asic_price = 100
     upgrades_obtained = []
+    difficulty_halver_popup_time = 10000
     old_difficulty = max_height
     difficulty_halve_time_left = 0
     difficulty_halve_max_time = 30
@@ -480,6 +482,7 @@ function save_progress () {
     blockSettings.writeNumber("game_asic_speed", asic_speed)
     blockSettings.writeNumber("game_asic_price", asic_price)
     blockSettings.writeNumberArray("game_upgrades_obtained", upgrades_obtained)
+    blockSettings.writeNumber("game_difficulty_halver_popup_time", difficulty_halver_popup_time)
     blockSettings.writeNumber("game_old_difficulty", old_difficulty)
     blockSettings.writeNumber("game_difficulty_halve_time_left", difficulty_halve_time_left)
     blockSettings.writeNumber("game_difficulty_halve_max_time", difficulty_halve_max_time)
@@ -595,6 +598,7 @@ let difficulty_halve_chance = 0
 let difficulty_halve_max_time = 0
 let difficulty_halve_time_left = 0
 let old_difficulty = 0
+let difficulty_halver_popup_time = 0
 let upgrades_obtained: number[] = []
 let asic_price = 0
 let asic_speed = 0
@@ -705,13 +709,13 @@ forever(function () {
 })
 forever(function () {
     if ((Math.percentChance(difficulty_halve_chance) || false) && !(difficulty_halving)) {
-        timer.throttle("summon_difficulty_halver", 10000, function () {
+        timer.throttle("summon_difficulty_halver", difficulty_halver_popup_time, function () {
             sprite_difficulty_halver = sprites.create(assets.image`difficulty_halver`, SpriteKind.Thing)
             sprite_difficulty_halver.z = 30
             sprite_difficulty_halver.setPosition(randint(0, scene.screenWidth()), randint(0, scene.screenHeight()))
             sprite_difficulty_halver.setStayInScreen(true)
             sprite_difficulty_halver.startEffect(effects.halo, 1750)
-            sprite_difficulty_halver.lifespan = 10000
+            sprite_difficulty_halver.lifespan = difficulty_halver_popup_time
         })
     }
     if (difficulty_halving && difficulty_halve_time_left == 0) {
