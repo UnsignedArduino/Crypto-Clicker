@@ -150,6 +150,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         computer_click()
     } else if (sprite_overlapping_kind(sprite_cursor_pointer, SpriteKind.Thing)) {
         difficulty_halving = true
+        overlapped_sprites(sprite_cursor_pointer, SpriteKind.Thing)[0].destroy(effects.halo, 100)
     } else if (sprite_cursor_pointer.overlapsWith(sprite_buy_autoclicker)) {
         buy_autoclicker_menu()
     } else if (sprite_cursor_pointer.overlapsWith(sprite_buy_computer)) {
@@ -684,7 +685,7 @@ forever(function () {
     pause(1000)
 })
 forever(function () {
-    if ((Math.percentChance(difficulty_halve_chance) || true) && difficulty_halve_time_left <= 0) {
+    if ((Math.percentChance(difficulty_halve_chance) || true) && !(difficulty_halving)) {
         sprite_difficulty_halver = sprites.create(assets.image`difficulty_halver`, SpriteKind.Thing)
         sprite_difficulty_halver.z = 30
         sprite_difficulty_halver.setPosition(randint(0, scene.screenWidth()), randint(0, scene.screenHeight()))
@@ -692,6 +693,17 @@ forever(function () {
         sprite_difficulty_halver.startEffect(effects.halo, 1750)
         sprite_difficulty_halver.lifespan = 10000
         pause(10000)
+    }
+    if (difficulty_halving && difficulty_halve_time_left == 0) {
+        max_height = max_height * 0.5
+        difficulty_halve_time_left = difficulty_halve_max_time
+    }
+    if (difficulty_halving) {
+        difficulty_halve_time_left += -1
+    }
+    if (difficulty_halving && difficulty_halve_time_left <= 0) {
+        max_height = max_height * 2
+        difficulty_halving = false
     }
     pause(1000)
 })
