@@ -140,6 +140,7 @@ function load_progress () {
     asic_speed = blockSettings.readNumber("game_asic_speed")
     asic_price = blockSettings.readNumber("game_asic_price")
     upgrades_obtained = blockSettings.readNumberArray("game_upgrades_obtained")
+    old_difficulty = blockSettings.readNumber("game_old_difficulty")
     difficulty_halve_time_left = blockSettings.readNumber("game_difficulty_halve_time_left")
     difficulty_halve_max_time = blockSettings.readNumber("game_difficulty_halve_max_time")
     difficulty_halve_chance = blockSettings.readNumber("game_difficulty_halve_chance")
@@ -332,7 +333,11 @@ function buy_autoclicker_menu () {
 spriteutils.createRenderable(0, function (screen2) {
     screen2.fillRect(0, 0, 160, 20, 15)
     images.print(screen2, "MakeCoins: " + score, 2, 2, 1)
-    images.print(screen2, "Target: " + magic_number, 2, 10, 1)
+    if (difficulty_halving) {
+        images.print(screen2, "Target: " + magic_number + "/" + max_height + " (" + difficulty_halve_time_left + ")", 2, 10, 1)
+    } else {
+        images.print(screen2, "Target: " + magic_number + "/" + max_height, 2, 10, 1)
+    }
     screen2.drawLine(0, 20, 160, 20, 1)
 })
 spriteutils.createRenderable(0, function (screen2) {
@@ -416,6 +421,7 @@ function set_default_save () {
     asic_speed = 200
     asic_price = 100
     upgrades_obtained = []
+    old_difficulty = max_height
     difficulty_halve_time_left = 0
     difficulty_halve_max_time = 30
     difficulty_halve_chance = 1
@@ -474,6 +480,7 @@ function save_progress () {
     blockSettings.writeNumber("game_asic_speed", asic_speed)
     blockSettings.writeNumber("game_asic_price", asic_price)
     blockSettings.writeNumberArray("game_upgrades_obtained", upgrades_obtained)
+    blockSettings.writeNumber("game_old_difficulty", old_difficulty)
     blockSettings.writeNumber("game_difficulty_halve_time_left", difficulty_halve_time_left)
     blockSettings.writeNumber("game_difficulty_halve_max_time", difficulty_halve_max_time)
     blockSettings.writeNumber("game_difficulty_halve_chance", difficulty_halve_chance)
@@ -490,9 +497,9 @@ function enable_cursor (en: boolean) {
 }
 function save_bool (name: string, value: boolean) {
     if (value) {
-        blockSettings.writeNumber(name, 0)
-    } else {
         blockSettings.writeNumber(name, 1)
+    } else {
+        blockSettings.writeNumber(name, 0)
     }
 }
 function make_menu_button () {
@@ -577,6 +584,7 @@ let difficulty_halving = false
 let difficulty_halve_chance = 0
 let difficulty_halve_max_time = 0
 let difficulty_halve_time_left = 0
+let old_difficulty = 0
 let upgrades_obtained: number[] = []
 let asic_price = 0
 let asic_speed = 0
@@ -674,7 +682,7 @@ forever(function () {
     })
 })
 forever(function () {
-    if (Math.floor(average_hash_per_sec) >= max_height) {
+    if (Math.floor(average_hash_per_sec) >= max_height && !(difficulty_halving)) {
         while (Math.floor(average_hash_per_sec) >= max_height) {
             max_height = Math.floor(max_height * 1.5)
             score_change = Math.ceil(score_change * 1.5)
@@ -685,7 +693,7 @@ forever(function () {
     pause(1000)
 })
 forever(function () {
-    if ((Math.percentChance(difficulty_halve_chance) || true) && !(difficulty_halving)) {
+    if ((Math.percentChance(difficulty_halve_chance) || false) && !(difficulty_halving)) {
         sprite_difficulty_halver = sprites.create(assets.image`difficulty_halver`, SpriteKind.Thing)
         sprite_difficulty_halver.z = 30
         sprite_difficulty_halver.setPosition(randint(0, scene.screenWidth()), randint(0, scene.screenHeight()))
@@ -695,14 +703,19 @@ forever(function () {
         pause(10000)
     }
     if (difficulty_halving && difficulty_halve_time_left == 0) {
-        max_height = max_height * 0.5
+        Notification.waitForNotificationFinish()
+        old_difficulty = max_height
+        max_height = Math.round(max_height * 0.5)
         difficulty_halve_time_left = difficulty_halve_max_time
+        timer.background(function () {
+            Notification.notify("Difficulty has been halved for " + difficulty_halve_max_time + " seconds! (" + old_difficulty + " --> " + max_height + ")", assets.image`down_arrow`)
+        })
     }
     if (difficulty_halving) {
         difficulty_halve_time_left += -1
     }
     if (difficulty_halving && difficulty_halve_time_left <= 0) {
-        max_height = max_height * 2
+        max_height = old_difficulty
         difficulty_halving = false
     }
     pause(1000)
