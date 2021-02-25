@@ -377,6 +377,12 @@ function make_upgrades_button () {
     sprite_upgrades_button.bottom = scene.screenHeight() - 2
     images.print(sprite_upgrades_button.image, "Upgrades Menu", 2, 2, 15)
 }
+function generate_new_target () {
+    local_previous_magic_number = magic_number
+    while (magic_number == local_previous_magic_number) {
+        magic_number = randint(0, max_height)
+    }
+}
 function make_buy_autoclicker () {
     sprite_buy_autoclicker = sprites.create(assets.image`buy_autoclicker_button`, SpriteKind.Shop)
     sprite_buy_autoclicker.top = 32
@@ -516,10 +522,7 @@ function check_for_magic_number (got: number) {
             effects.confetti.startScreenEffect(200)
         }
         score += score_change
-        local_previous_magic_number = magic_number
-        while (magic_number == local_previous_magic_number) {
-            magic_number = randint(0, max_height)
-        }
+        generate_new_target()
     }
 }
 function get_upgrades_menu () {
@@ -582,8 +585,8 @@ let sprite_difficulty_halving_status_bar: StatusBarSprite = null
 let local_upgrade_got: blockObject.BlockObject = null
 let local_upgrades_shown = 0
 let local_available_upgrades: blockObject.BlockObject[] = []
-let local_previous_magic_number = 0
 let local_overlapping_sprites: Sprite[] = []
+let local_previous_magic_number = 0
 let selected = false
 let all_upgrades: blockObject.BlockObject[] = []
 let local_requirements_obj: blockObject.BlockObject = null
@@ -723,6 +726,7 @@ forever(function () {
         old_difficulty = max_height
         max_height = Math.round(max_height * 0.5)
         difficulty_halve_time_left = difficulty_halve_max_time
+        generate_new_target()
         timer.background(function () {
             Notification.notify("Difficulty has been halved for " + difficulty_halve_max_time + " seconds! (" + old_difficulty + " --> " + max_height + ")", assets.image`down_arrow`)
         })
