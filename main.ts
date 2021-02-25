@@ -259,6 +259,12 @@ function do_upgrade (id: number) {
         asic_speed = asic_speed * 0.5
     } else if (id == 14) {
         asic_price = asic_price * 0.5
+    } else if (id == 15) {
+        difficulty_halver_popup_time = difficulty_halver_popup_time * 2
+    } else if (id == 16) {
+        difficulty_halve_chance = difficulty_halve_chance * 2
+    } else if (id == 17) {
+        difficulty_halve_max_time = difficulty_halve_max_time * 2
     }
     autoclicker_speed = Math.floor(autoclicker_speed)
     computer_speed = Math.floor(computer_speed)
@@ -266,6 +272,9 @@ function do_upgrade (id: number) {
     autoclicker_price = Math.floor(autoclicker_price)
     computer_price = Math.floor(computer_price)
     asic_price = Math.floor(asic_price)
+    difficulty_halver_popup_time = Math.floor(difficulty_halver_popup_time)
+    difficulty_halve_chance = Math.floor(difficulty_halve_chance)
+    difficulty_halve_max_time = Math.floor(difficulty_halve_max_time)
 }
 function move_till_not_touching (sprite: Sprite, other_sprite: Sprite, dx: number, dy: number) {
     while (sprite.overlapsWith(other_sprite)) {
@@ -328,7 +337,7 @@ function buy_autoclicker_menu () {
         score += autoclicker_price * -1
         autoclicker_price = autoclicker_price * 1.1
     }
-    autoclicker_price = Math.round(autoclicker_price)
+    autoclicker_price = Math.ceil(autoclicker_price)
     move_till_not_touching(sprite_cursor_pointer, sprite_buy_autoclicker, -1, 0)
 }
 spriteutils.createRenderable(0, function (screen2) {
@@ -401,16 +410,22 @@ function define_upgrades () {
     make_upgrade_obj("Hardware Autoclickers", "Triple the speed of cursors.", 15, 2, 10, 3, 0, 0, 0)
     make_upgrade_obj("Discounted Cursors", "Halves the price of cursors.", 15, 3, 10, 5, 0, 0, 0)
     make_upgrade_obj("USB 3.0 Cursors", "Quadruples the speed of cursors.", 20, 4, 10, 5, 0, 0, 0)
+    info.stopCountdown()
     make_upgrade_obj("Faster Mining Software", "Doubles the speed of computers.", 20, 5, 15, 0, 2, 0, 0)
     make_upgrade_obj("Switch to Linux", "Triples the speed of computers.", 30, 6, 20, 0, 5, 0, 0)
     make_upgrade_obj("Direct from the Factory", "Halves the price of computers.", 30, 7, 25, 0, 5, 0, 0)
     make_upgrade_obj("External GPUs", "Sextuples (x6!) the speed of computers.", 60, 8, 30, 0, 10, 0, 0)
     make_upgrade_obj("PCI Express buses", "Triples the speed of computers.", 40, 9, 30, 0, 10, 0, 0)
+    info.stopCountdown()
     make_upgrade_obj("Water cooling", "Doubles the speed of ASICs.", 75, 10, 50, 0, 0, 3, 0)
     make_upgrade_obj("Bulk buying", "Halves the price of ASICs.", 50, 11, 50, 0, 0, 5, 0)
     make_upgrade_obj("Firmware updates", "Triples the speed of ASICs.", 100, 12, 80, 0, 0, 5, 0)
     make_upgrade_obj("Improved ventilation", "Doubles the speed of ASICs.", 80, 13, 80, 0, 0, 5, 0)
     make_upgrade_obj("FPGAs are cheaper", "Halves the price of ASICs.", 100, 14, 80, 0, 0, 10, 0)
+    info.stopCountdown()
+    make_upgrade_obj("Longer Popups", "The Difficulty Halver pops up for twice as long.", 10, 15, 8, 0, 0, 0, 0)
+    make_upgrade_obj("Luckier", "The chance of the Difficulty Halver popping up is doubled.", 20, 16, 10, 0, 0, 0, 0)
+    make_upgrade_obj("Lengthier", "The Difficulty Halver effect length is doubled", 50, 17, 25, 0, 0, 0, 0)
 }
 function set_default_save () {
     show_particles = true
