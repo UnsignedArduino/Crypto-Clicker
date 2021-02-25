@@ -265,6 +265,12 @@ function do_upgrade (id: number) {
         difficulty_halve_chance = difficulty_halve_chance * 2
     } else if (id == 17) {
         difficulty_halve_max_time = difficulty_halve_max_time * 2
+    } else if (id == 18) {
+        difficulty_halver_popup_time = difficulty_halver_popup_time * 2
+    } else if (id == 19) {
+        difficulty_halve_chance = difficulty_halve_chance * 2
+    } else if (id == 20) {
+        difficulty_halve_max_time = difficulty_halve_max_time * 2
     }
     autoclicker_speed = Math.floor(autoclicker_speed)
     computer_speed = Math.floor(computer_speed)
@@ -410,6 +416,7 @@ function define_upgrades () {
     make_upgrade_obj("Hardware Autoclickers", "Triple the speed of cursors.", 15, 2, 10, 3, 0, 0, 0)
     make_upgrade_obj("Discounted Cursors", "Halves the price of cursors.", 15, 3, 10, 5, 0, 0, 0)
     make_upgrade_obj("USB 3.0 Cursors", "Quadruples the speed of cursors.", 20, 4, 10, 5, 0, 0, 0)
+    // only a visual aid
     info.stopCountdown()
     make_upgrade_obj("Faster Mining Software", "Doubles the speed of computers.", 20, 5, 15, 0, 2, 0, 0)
     make_upgrade_obj("Switch to Linux", "Triples the speed of computers.", 30, 6, 20, 0, 5, 0, 0)
@@ -423,9 +430,12 @@ function define_upgrades () {
     make_upgrade_obj("Improved ventilation", "Doubles the speed of ASICs.", 80, 13, 80, 0, 0, 5, 0)
     make_upgrade_obj("FPGAs are cheaper", "Halves the price of ASICs.", 100, 14, 80, 0, 0, 10, 0)
     info.stopCountdown()
-    make_upgrade_obj("Longer Popups", "The Difficulty Halver pops up for twice as long.", 10, 15, 8, 0, 0, 0, 0)
+    make_upgrade_obj("Longer popups", "The Difficulty Halver pops up for twice as long.", 10, 15, 8, 0, 0, 0, 0)
     make_upgrade_obj("Luckier", "The chance of the Difficulty Halver popping up is doubled.", 20, 16, 10, 0, 0, 0, 0)
     make_upgrade_obj("Lengthier", "The Difficulty Halver effect length is doubled", 50, 17, 25, 0, 0, 0, 0)
+    make_upgrade_obj("Even longer popups", "The Difficulty Halver pops up for twice as long.", 20, 18, 20, 0, 0, 0, 0)
+    make_upgrade_obj("Luck III", "The chance of the Difficulty Halver popping up is doubled.", 50, 19, 30, 0, 0, 0, 0)
+    make_upgrade_obj("Slow time keeping", "The Difficulty Halver effect length is doubled", 80, 20, 50, 0, 0, 0, 0)
 }
 function set_default_save () {
     show_particles = true
